@@ -1,0 +1,20 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#landing {
+  height: 100%;
+  width: 100%;
+  background-color: grey;
+  position: absolute;
+}
+
+#container {
+  margin: 0 auto;
+  width: 85%;
+  height: 100%;
+  border-left: 1px solid lightgrey;
+  border-right: 1px solid lightgrey;
+  background-color: whitesmoke;
+}

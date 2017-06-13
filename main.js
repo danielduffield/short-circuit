@@ -56,6 +56,17 @@ function generateTiles() {
   return tiles
 }
 
+function generateBoardObject(tiles) {
+  var row = []
+  var board = []
+  var rows = 8
+  for (let i = 0; i < rows; i++) {
+    row = tiles.splice(0, 8)
+    board.push(row)
+  }
+  return board
+}
+
 var $board = generateBoard()
 var $start = document.getElementById('start-button')
 var $container = document.getElementById('container')

@@ -67,6 +67,34 @@ function generateBoardObject(tiles) {
   return board
 }
 
+function renderBoard(board) {
+  var $board = document.createElement('div')
+  for (let i = 0; i < board.length; i++) {
+    var $row = renderRow(board[i])
+  }
+  $board.appendChild($row)
+  return $board
+}
+
+function renderTile(tile) {
+  var $tile = document.createElement('div')
+  $tile.setAttribute('class', 'board-tile')
+  $tile.setAttribute('id', 'row-' + tile.row + ' column-' + tile.column)
+  $tile.textContent = 'row-' + tile.row + ' column-' + tile.column
+  return $tile
+}
+
+function renderRow(tiles) {
+  var $row = document.createElement('div')
+  $row.setAttribute('class', 'board-row')
+  $row.setAttribute('id', 'row-' + tiles[0].row)
+  for (let i = 0; i < tiles.length; i++) {
+    var $tile = renderTile(tiles[i])
+    $row.appendChild($tile)
+  }
+  return $row
+}
+
 var $board = generateBoard()
 var $start = document.getElementById('start-button')
 var $container = document.getElementById('container')

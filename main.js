@@ -12,6 +12,9 @@ function generateBoard() {
       $tile.setAttribute('id', 'row-' + i + ' column-' + j)
       $tile.textContent = 'row-' + i + ' column-' + j
       console.log('row-' + i + ' column-' + j)
+      if (i === 0 || i === 7 || j === 0 || j === 7) {
+        $tile.classList.add('hidden-tile')
+      }
       $row.appendChild($tile)
     }
     $board.appendChild($row)

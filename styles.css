@@ -37,15 +37,17 @@ h1 {
 .board-tile {
   width: calc(50% / 8);
   height: 75px;
-  background-color: dimgrey;
-  border: 1px solid red;
+  background-color: lightblue;
+  border: 1px solid dimgrey;
   z-index: 1;
   display: inline-block;
   font-size: 12px;
 }
 
 .hidden-tile {
-  background-color: grey;
+  border: 1px solid floralwhite;
+  background-color: whitesmoke;
+  color: whitesmoke;
   left: 10%;
 }
 

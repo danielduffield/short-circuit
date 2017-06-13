@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'VT323', monospace;
 }
 
 #landing {
@@ -41,6 +42,7 @@ h1 {
   z-index: 1;
   display: inline-block;
   border-radius: 5px;
+  font-size: 20px;
 }
 
 .hidden-tile {

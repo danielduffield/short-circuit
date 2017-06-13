@@ -1,29 +1,3 @@
-/* eslint-disable no-unused-vars */
-
-function generateBoard() {
-  var $board = document.createElement('div')
-  var rows = 8
-  for (let i = 0; i < rows; i++) {
-    var $row = document.createElement('div')
-    $row.setAttribute('class', 'board-row')
-    $row.setAttribute('id', 'row-' + i)
-    $row.name = 'column-' + i
-    for (let j = 0; j < rows; j++) {
-      var $tile = document.createElement('div')
-      $tile.setAttribute('class', 'board-tile')
-      $tile.setAttribute('id', 'row-' + i + ' column-' + j)
-      $tile.textContent = 'row-' + i + ' column-' + j
-      console.log('row-' + i + ' column-' + j)
-      if (i === 0 || i === 7 || j === 0 || j === 7) {
-        $tile.classList.add('hidden-tile')
-      }
-      $row.appendChild($tile)
-    }
-    $board.appendChild($row)
-  }
-  return $board
-}
-
 function Tile(row, column, isHidden) {
   this.row = row
   this.column = column

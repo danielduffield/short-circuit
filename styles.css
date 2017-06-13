@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 #landing {
@@ -8,6 +9,7 @@
   width: 100%;
   background-color: grey;
   position: absolute;
+  z-index: -100;
 }
 
 #container {
@@ -17,6 +19,7 @@
   border-left: 1px solid lightgrey;
   border-right: 1px solid lightgrey;
   background-color: whitesmoke;
+  z-index: 0;
 }
 
 h1 {
@@ -24,4 +27,23 @@ h1 {
   font-family: 'Share Tech Mono', monospace;
   font-size: 3em;
   padding: 30px 0;
+}
+
+.board-row {
+  width: 100%;
+  overflow: hidden;
+}
+
+.board-tile {
+  width: calc(100% / 8);
+  height: 20px;
+  background-color: dimgrey;
+  border: 2px solid red;
+  z-index: 1;
+  float: left;
+}
+
+.hidden-tile {
+  background-color: grey;
+  left: 10%;
 }

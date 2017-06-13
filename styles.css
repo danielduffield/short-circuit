@@ -14,7 +14,7 @@
 
 #container {
   margin: 0 auto;
-  width: 85%;
+  width: 100%;
   height: 100%;
   border-left: 1px solid lightgrey;
   border-right: 1px solid lightgrey;
@@ -35,15 +35,23 @@ h1 {
 }
 
 .board-tile {
-  width: calc(100% / 8);
-  height: 20px;
+  width: calc(50% / 8);
+  height: 75px;
   background-color: dimgrey;
-  border: 2px solid red;
+  border: 1px solid red;
   z-index: 1;
-  float: left;
+  display: inline-block;
 }
 
 .hidden-tile {
   background-color: grey;
   left: 10%;
+}
+
+#game-board {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 100%;
+  position: fixed;
+  font-size: 0;
 }

@@ -30,7 +30,7 @@ function generateTiles() {
   return tiles
 }
 
-function generateBoardObject(tiles) {
+function generateBoard(tiles) {
   var row = []
   var board = []
   var rows = 8
@@ -72,7 +72,7 @@ function renderRow(tiles) {
   return $row
 }
 
-var board = generateBoardObject(generateTiles())
+var board = generateBoard(generateTiles())
 var $board = renderBoard(board)
 var $start = document.getElementById('start-button')
 var $container = document.getElementById('container')

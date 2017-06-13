@@ -1,0 +1,71 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'VT323', monospace;
+}
+
+#landing {
+  height: 100%;
+  width: 100%;
+  background-color: whitesmoke;
+  position: absolute;
+  z-index: -100;
+}
+
+#container {
+  margin: 0 auto;
+  width: 90%;
+  height: 100%;
+  background-color: whitesmoke;
+  z-index: 0;
+  text-align: center;
+  min-width: 683px;
+}
+
+h1 {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 3em;
+  padding: 20px 0 0;
+}
+
+.board-row {
+  width: 100%;
+  overflow: hidden;
+}
+
+.board-tile {
+  width: 77px;
+  height: 77px;
+  background-color: lightblue;
+  border: 1px solid grey;
+  z-index: 1;
+  display: inline-block;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+.hidden-tile {
+  border: 1px solid whitesmoke;
+  background-color: whitesmoke;
+  color: whitesmoke;
+  left: 10%;
+}
+
+#game-board {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 100%;
+  position: fixed;
+  font-size: 0;
+  top: 13%;
+}
+
+#start-button {
+  font-size: 2em;
+  margin: 10px 0;
+  background-color: gold;
+  border-radius: 10px;
+  height: 80px;
+  width: 200px;
+}

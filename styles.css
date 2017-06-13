@@ -62,8 +62,9 @@ h1 {
 }
 
 #start-button {
+  font-size: 2em;
   margin: 10px 0;
-  background-color: palegoldenrod;
+  background-color: gold;
   border-radius: 10px;
   height: 80px;
   width: 200px;

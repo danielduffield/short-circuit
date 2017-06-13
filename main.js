@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 function generateBoard() {
   var $board = document.createElement('div')
   var rows = 8
@@ -20,6 +22,38 @@ function generateBoard() {
     $board.appendChild($row)
   }
   return $board
+}
+
+function Tile(row, column, isHidden) {
+  this.row = row
+  this.column = column
+  if (row === 0 || row === 7 || column === 0 || column === 7) {
+    isHidden = true
+  }
+  else {
+    isHidden = false
+  }
+}
+
+function generateTiles() {
+  this.row = [0, 1, 2, 3, 4, 5, 6, 7]
+  this.column = [0, 1, 2, 3, 4, 5, 6, 7]
+  var tiles = []
+
+  for (let i = 0; i < this.row.length; i++) {
+    for (let j = 0; j < this.column.length; j++) {
+      tiles.push(new Tile(this.row[i], this.column[j]))
+    }
+  }
+  for (let i = 0; i < tiles.length; i++) {
+    if (tiles[i].row === 0 || tiles[i].row === 7 || tiles[i].column === 0 || tiles[i].column === 7) {
+      tiles[i].isHidden = true
+    }
+    else {
+      tiles[i].isHidden = false
+    }
+  }
+  return tiles
 }
 
 var $board = generateBoard()

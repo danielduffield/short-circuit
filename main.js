@@ -23,4 +23,14 @@ function generateBoard() {
 }
 
 var $board = generateBoard()
-document.getElementById('game-board').appendChild($board)
+var $start = document.getElementById('start-button')
+var $container = document.getElementById('container')
+
+var startGame = function(event) {
+  console.log('clicked start')
+  document.getElementById('game-board').appendChild($board)
+  removeEventListener('click', startGame)
+  $container.removeChild($start)
+}
+
+$start.addEventListener('click', startGame)

@@ -60,3 +60,11 @@ h1 {
   font-size: 0;
   top: 13%;
 }
+
+#start-button {
+  margin: 10px 0;
+  background-color: palegoldenrod;
+  border-radius: 10px;
+  height: 80px;
+  width: 200px;
+}

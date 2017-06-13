@@ -16,3 +16,6 @@ function generateBoard() {
   }
   return $board
 }
+
+var $board = generateBoard()
+document.getElementById('game-board').appendChild($board)

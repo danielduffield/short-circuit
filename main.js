@@ -10,6 +10,8 @@ function generateBoard() {
       var $tile = document.createElement('div')
       $tile.setAttribute('class', 'board-tile')
       $tile.setAttribute('id', 'row-' + i + ' column-' + j)
+      $tile.textContent = 'row-' + i + ' column-' + j
+      console.log('row-' + i + ' column-' + j)
       $row.appendChild($tile)
     }
     $board.appendChild($row)

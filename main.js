@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -87,20 +85,7 @@ function getSelectedTiles(board) {
   return selectedTiles
 }
 
-function swapTiles(selectedTiles) {
-  let i = selectedTiles[0]
-  let j = selectedTiles[1]
-  let tempColumn = i.originCol
-  let tempRow = i.originRow
-  i.originRow = j.originRow
-  i.originCol = j.originCol
-  j.originRow = tempRow
-  j.originCol = tempColumn
-  i.isSelected = false
-  j.isSelected = false
-}
-
-function swapTiles2(coordinates) {
+function swapTiles(coordinates) {
   let i = coordinates[0]
   let j = coordinates[1]
   console.log(i[0], i[1])
@@ -138,7 +123,7 @@ let selectTile = function(event) {
     }
     let selectedTiles = getSelectedTiles(board)
     if (selectedTiles.length > 1) {
-      swapTiles2(selectedList)
+      swapTiles(selectedList)
       selectedList = []
     }
     updateBoard(board)

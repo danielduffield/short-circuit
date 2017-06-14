@@ -90,26 +90,27 @@ let startGame = function(event) {
 }
 
 let selectTile = function(event) {
-  if (!(event.target.classList[1] === 'hidden-tile') && event.target.classList[0] === 'board-tile') {
-    let $current = {}
-    $current = board[event.target.id[4]][event.target.id[13]]
-    $current.isSelected = !$current.isSelected
-    selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
-    if ($current.isSelected === false) {
-      $current = 0
-      selectedTiles = []
-    }
-    if (selectedTiles.length > 1) {
-      board = swapTiles(selectedTiles)
-      selectedTiles = []
-    }
-    let $board = document.getElementById('board-render')
-    $board.removeEventListener('click', selectTile)
-    document.getElementById('game-board').removeChild($board)
-    $board = renderBoard(board)
-    document.getElementById('game-board').appendChild($board)
-    $board.addEventListener('click', selectTile)
+  if ((event.target.classList[1] === 'hidden-tile') || !(event.target.classList[0] === 'board-tile')) {
+    return
   }
+  let $current = {}
+  $current = board[event.target.id[4]][event.target.id[13]]
+  $current.isSelected = !$current.isSelected
+  selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
+  if ($current.isSelected === false) {
+    $current = 0
+    selectedTiles = []
+  }
+  if (selectedTiles.length > 1) {
+    board = swapTiles(selectedTiles)
+    selectedTiles = []
+  }
+  let $board = document.getElementById('board-render')
+  $board.removeEventListener('click', selectTile)
+  document.getElementById('game-board').removeChild($board)
+  $board = renderBoard(board)
+  document.getElementById('game-board').appendChild($board)
+  $board.addEventListener('click', selectTile)
 }
 
 let selectedTiles = []

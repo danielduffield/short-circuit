@@ -3,6 +3,8 @@ function generateTiles() {
   for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
       var tile = {}
+      tile.originRow = i
+      tile.originCol = j
       tile.row = i
       tile.column = j
       tile.isSelected = false
@@ -47,7 +49,7 @@ function renderTile(tile) {
     $tile.classList.add('selected')
   }
   $tile.setAttribute('id', 'row-' + tile.row + ' column-' + tile.column)
-  $tile.textContent = 'row-' + tile.row + ' column-' + tile.column
+  $tile.textContent = 'row-' + tile.originRow + ' column-' + tile.originCol
   return $tile
 }
 
@@ -83,12 +85,12 @@ function swapTiles(board) {
   if (selectedTiles.length > 1) {
     let i = selectedTiles[0]
     let j = selectedTiles[1]
-    let tempColumn = i.column
-    let tempRow = i.row
-    i.row = j.row
-    i.column = j.column
-    j.row = tempRow
-    j.column = tempColumn
+    let tempColumn = i.originCol
+    let tempRow = i.originRow
+    i.originRow = j.originRow
+    i.originCol = j.originCol
+    j.originRow = tempRow
+    j.originCol = tempColumn
     i.isSelected = false
     j.isSelected = false
   }

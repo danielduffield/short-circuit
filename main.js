@@ -49,6 +49,16 @@ function shuffleArray(array) {
   return array
 }
 
+function defineGoals(candidates) {
+  let shuffledCandidates = shuffleArray(candidates)
+  let start = shuffledCandidates.pop()
+  let end = shuffledCandidates.pop()
+  let goals = []
+  goals.push(start)
+  goals.push(end)
+  return goals
+}
+
 function generateBoard(tiles) {
   let row = []
   let board = []
@@ -144,8 +154,11 @@ let board = generateBoard(generateTiles())
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')
 let $container = document.getElementById('container')
+
 let selectedTiles = []
+
 let goalCandidates = getGoalCandidates(board)
+let goals = defineGoals(goalCandidates)
 
 $start.addEventListener('click', startGame)
 $board.addEventListener('click', selectTile)

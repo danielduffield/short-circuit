@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -8,13 +10,33 @@ function generateTiles() {
         isSelected: false,
         isHidden: false
       }
-      if (tile.originRow === 0 || tile.originRow === 7 || tile.originCol === 0 || tile.originCol === 7) {
+      if (isHidden(tile)) {
         tile.isHidden = true
       }
       tiles.push(tile)
     }
   }
   return tiles
+}
+
+function isHidden(tile) {
+  return tile.originRow === 0 || tile.originRow === 7 || tile.originCol === 0 || tile.originCol === 7
+}
+
+function isHiddenCorner(tile) {
+  return (tile.originRow === 0 && tile.originCol === 0) || (tile.originRow === 0 && tile.originCol === 7) || (tile.originRow === 7 && tile.originCol === 7) || (tile.originRow === 7 && tile.originCol === 0)
+}
+
+function getGoalCandidates(board) {
+  let candidates = []
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      if (isHidden(board[i][j]) && !isHiddenCorner(board[i][j])) {
+        candidates.push(board[i][j])
+      }
+    }
+  }
+  return candidates
 }
 
 function generateBoard(tiles) {

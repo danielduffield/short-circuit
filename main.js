@@ -70,7 +70,9 @@ var startGame = function(event) {
 }
 
 var updateBoard = function(event) {
-  console.log(event.target)
+  if (!(event.target.classList[1] === 'hidden-tile') && event.target.classList[0] === 'board-tile') {
+    console.log(event.target)
+  }
 }
 
 $start.addEventListener('click', startGame)

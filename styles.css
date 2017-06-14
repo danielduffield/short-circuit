@@ -73,3 +73,11 @@ h1 {
 .selected {
   background-color: gold;
 }
+
+.start-point {
+  background-color: red;
+}
+
+.end-point {
+  background-color: green;
+}

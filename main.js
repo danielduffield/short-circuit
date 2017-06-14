@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -5,12 +7,10 @@ function generateTiles() {
       let tile = {
         originRow: i,
         originCol: j,
-        row: i,
-        column: j,
         isSelected: false,
         isHidden: false
       }
-      if (tile.row === 0 || tile.row === 7 || tile.column === 0 || tile.column === 7) {
+      if (tile.originRow === 0 || tile.originRow === 7 || tile.originCol === 0 || tile.originCol === 7) {
         tile.isHidden = true
       }
       tiles.push(tile)
@@ -34,13 +34,14 @@ function renderBoard(board) {
   let $board = document.createElement('div')
   $board.setAttribute('id', 'board-render')
   for (let i = 0; i < board.length; i++) {
-    let $row = renderRow(board[i])
+    let $row = renderRow(board[i], i)
+    $row.setAttribute('id', 'row-' + i)
     $board.appendChild($row)
   }
   return $board
 }
 
-function renderTile(tile) {
+function renderTile(tile, rowNum) {
   let $tile = document.createElement('div')
   $tile.setAttribute('class', 'board-tile')
   if (tile.isHidden === true) {
@@ -49,17 +50,17 @@ function renderTile(tile) {
   if (tile.isSelected === true) {
     $tile.classList.add('selected')
   }
-  $tile.setAttribute('id', 'row-' + tile.row + ' column-' + tile.column)
   $tile.textContent = 'row-' + tile.originRow + ' column-' + tile.originCol
   return $tile
 }
 
-function renderRow(tiles) {
+function renderRow(tiles, rowNum) {
   let $row = document.createElement('div')
   $row.setAttribute('class', 'board-row')
-  $row.setAttribute('id', 'row-' + tiles[0].row)
+
   for (let i = 0; i < tiles.length; i++) {
-    let $tile = renderTile(tiles[i])
+    let $tile = renderTile(tiles[i], rowNum)
+    $tile.setAttribute('id', 'row-' + rowNum + ' column-' + i)
     $row.appendChild($tile)
   }
   return $row
@@ -89,9 +90,6 @@ function getSelectedTiles(board) {
 function swapTiles(selectedTiles) {
   let i = selectedTiles[0]
   let j = selectedTiles[1]
-  console.log('swap')
-  console.log(i)
-  console.log(j)
   let tempColumn = i.originCol
   let tempRow = i.originRow
   i.originRow = j.originRow
@@ -100,6 +98,20 @@ function swapTiles(selectedTiles) {
   j.originCol = tempColumn
   i.isSelected = false
   j.isSelected = false
+}
+
+function swapTiles2(coordinates) {
+  let i = coordinates[0]
+  let j = coordinates[1]
+  console.log(i[0], i[1])
+  console.log(j[0], j[1])
+  let firstSelected = board[i[0]][i[1]]
+  let secondSelected = board[j[0]][j[1]]
+  board[i[0]][i[1]] = secondSelected
+  board[j[0]][j[1]] = firstSelected
+  board[i[0]][i[1]].isSelected = false
+  board[j[0]][j[1]].isSelected = false
+  return board
 }
 
 let board = generateBoard(generateTiles())
@@ -118,16 +130,21 @@ let selectTile = function(event) {
     let $current = {}
     $current = board[event.target.id[4]][event.target.id[13]]
     $current.isSelected = !$current.isSelected
+    selectedList.push([(event.target.id[4]), (event.target.id[13])])
+    console.log(selectedList)
     if ($current.isSelected === false) {
       $current = 0
+      selectedList = []
     }
     let selectedTiles = getSelectedTiles(board)
     if (selectedTiles.length > 1) {
-      swapTiles(selectedTiles)
+      swapTiles2(selectedList)
+      selectedList = []
     }
     updateBoard(board)
   }
 }
 
+let selectedList = []
 $start.addEventListener('click', startGame)
 $board.addEventListener('click', selectTile)

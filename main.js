@@ -70,8 +70,8 @@ function distanceCheck(start, end) {
 }
 
 function renderGoals(goals) {
-  goals[0].goal = 'start'
-  goals[1].goal = 'end'
+  goals[0].goal = 'start-point'
+  goals[1].goal = 'end-point'
   return board
 }
 
@@ -107,12 +107,7 @@ function renderTile(tile, rowNum) {
     $tile.classList.add('selected')
   }
   if (tile.goal) {
-    if (tile.goal === 'start') {
-      $tile.classList.add('start-point')
-    }
-    if (tile.goal === 'end') {
-      $tile.classList.add('end-point')
-    }
+    $tile.classList.add(tile.goal)
   }
   $tile.textContent = 'row-' + tile.originRow + ' column-' + tile.originCol
   return $tile

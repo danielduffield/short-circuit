@@ -60,6 +60,11 @@ function defineGoals(candidates) {
   return goals
 }
 
+function distanceCheck(start, end) {
+  let distance = Math.hypot((start.originCol - end.originCol), (start.originRow - end.originRow))
+  return distance
+}
+
 function renderGoals(goals) {
   console.log(goals)
   goals[0].goal = 'start'

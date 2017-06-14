@@ -5,6 +5,7 @@ function generateTiles() {
       var tile = {}
       tile.row = i
       tile.column = j
+      tile.isSelected = false
       tile.isHidden = false
       if (tile.row === 0 || tile.row === 7 || tile.column === 0 || tile.column === 7) {
         tile.isHidden = true
@@ -41,6 +42,9 @@ function renderTile(tile) {
   if (tile.isHidden === true) {
     $tile.classList.add('hidden-tile')
   }
+  if (tile.isSelected === true) {
+    $tile.classList.add('selected')
+  }
   $tile.setAttribute('id', 'row-' + tile.row + ' column-' + tile.column)
   $tile.textContent = 'row-' + tile.row + ' column-' + tile.column
   return $tile
@@ -69,11 +73,12 @@ var startGame = function(event) {
   $container.removeChild($start)
 }
 
-var updateBoard = function(event) {
+var selectTile = function(event) {
   if (!(event.target.classList[1] === 'hidden-tile') && event.target.classList[0] === 'board-tile') {
     console.log(event.target)
+    console.log(board[event.target.id[4]][event.target.id[13]])
   }
 }
 
 $start.addEventListener('click', startGame)
-$board.addEventListener('click', updateBoard)
+$board.addEventListener('click', selectTile)

@@ -69,4 +69,9 @@ var startGame = function(event) {
   $container.removeChild($start)
 }
 
+var updateBoard = function(event) {
+  console.log(event.target)
+}
+
 $start.addEventListener('click', startGame)
+$board.addEventListener('click', updateBoard)

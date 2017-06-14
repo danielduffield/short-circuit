@@ -137,6 +137,10 @@ function swapTiles(coordinates) {
   return board
 }
 
+function isInvalidTile(event) {
+  return ((event.target.classList[1] === 'hidden-tile') || !(event.target.classList[0] === 'board-tile'))
+}
+
 let startGame = function(event) {
   document.getElementById('game-board').appendChild($board)
   removeEventListener('click', startGame)
@@ -144,7 +148,7 @@ let startGame = function(event) {
 }
 
 let selectTile = function(event) {
-  if ((event.target.classList[1] === 'hidden-tile') || !(event.target.classList[0] === 'board-tile')) {
+  if (isInvalidTile(event)) {
     return
   }
   let $current = {}

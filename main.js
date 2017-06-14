@@ -71,6 +71,29 @@ function updateBoard(board) {
   $board.addEventListener('click', selectTile)
 }
 
+function swapTiles(board) {
+  var selectedTiles = []
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      if (board[i][j].isSelected === true) {
+        selectedTiles.push(board[i][j])
+      }
+    }
+  }
+  if (selectedTiles.length > 1) {
+    let i = selectedTiles[0]
+    let j = selectedTiles[1]
+    let tempColumn = i.column
+    let tempRow = i.row
+    i.row = j.row
+    i.column = j.column
+    j.row = tempRow
+    j.column = tempColumn
+    i.isSelected = false
+    j.isSelected = false
+  }
+}
+
 var board = generateBoard(generateTiles())
 var $board = renderBoard(board)
 var $start = document.getElementById('start-button')
@@ -89,6 +112,7 @@ var selectTile = function(event) {
     var $current = board[event.target.id[4]][event.target.id[13]]
     $current.isSelected = !$current.isSelected
     console.log($current)
+    swapTiles(board)
     updateBoard(board)
   }
 }

@@ -6,15 +6,73 @@ function generateTiles() {
         originRow: i,
         originCol: j,
         isSelected: false,
-        isHidden: false
+        isHidden: false,
+        goal: null
       }
-      if (tile.originRow === 0 || tile.originRow === 7 || tile.originCol === 0 || tile.originCol === 7) {
+      if (isHidden(tile)) {
         tile.isHidden = true
       }
       tiles.push(tile)
     }
   }
   return tiles
+}
+
+function isHidden(tile) {
+  return tile.originRow === 0 || tile.originRow === 7 || tile.originCol === 0 || tile.originCol === 7
+}
+
+function isHiddenCorner(tile) {
+  return (tile.originRow === 0 && tile.originCol === 0) || (tile.originRow === 0 && tile.originCol === 7) || (tile.originRow === 7 && tile.originCol === 7) || (tile.originRow === 7 && tile.originCol === 0)
+}
+
+function getGoalCandidates(board) {
+  let candidates = []
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      if (isHidden(board[i][j]) && !isHiddenCorner(board[i][j])) {
+        candidates.push(board[i][j])
+      }
+    }
+  }
+  return candidates
+}
+
+function shuffleArray(array) {
+  let shuffled = array.slice()
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1))
+    let temp = shuffled[i]
+    shuffled[i] = shuffled[j]
+    shuffled[j] = temp
+  }
+  return shuffled
+}
+
+function defineGoals(candidates) {
+  let shuffledCandidates = shuffleArray(candidates)
+  let start = shuffledCandidates.pop()
+  let end = shuffledCandidates.pop()
+  let distance = distanceCheck(start, end)
+  while (distance < 4) {
+    end = shuffledCandidates.pop()
+    distance = distanceCheck(start, end)
+  }
+  let goals = []
+  goals.push(start)
+  goals.push(end)
+  return goals
+}
+
+function distanceCheck(start, end) {
+  let distance = Math.hypot((start.originCol - end.originCol), (start.originRow - end.originRow))
+  return distance
+}
+
+function renderGoals(goals) {
+  goals[0].goal = 'start-point'
+  goals[1].goal = 'end-point'
+  return board
 }
 
 function generateBoard(tiles) {
@@ -48,6 +106,9 @@ function renderTile(tile, rowNum) {
   if (tile.isSelected === true) {
     $tile.classList.add('selected')
   }
+  if (tile.goal) {
+    $tile.classList.add(tile.goal)
+  }
   $tile.textContent = 'row-' + tile.originRow + ' column-' + tile.originCol
   return $tile
 }
@@ -67,8 +128,6 @@ function renderRow(tiles, rowNum) {
 function swapTiles(coordinates) {
   let i = coordinates[0]
   let j = coordinates[1]
-  console.log(i[0], i[1])
-  console.log(j[0], j[1])
   let firstSelected = board[i[0]][i[1]]
   let secondSelected = board[j[0]][j[1]]
   board[i[0]][i[1]] = secondSelected
@@ -78,10 +137,9 @@ function swapTiles(coordinates) {
   return board
 }
 
-let board = generateBoard(generateTiles())
-let $board = renderBoard(board)
-let $start = document.getElementById('start-button')
-let $container = document.getElementById('container')
+function isInvalidTile(event) {
+  return ((event.target.classList[1] === 'hidden-tile') || !(event.target.classList[0] === 'board-tile'))
+}
 
 let startGame = function(event) {
   document.getElementById('game-board').appendChild($board)
@@ -90,28 +148,40 @@ let startGame = function(event) {
 }
 
 let selectTile = function(event) {
-  if (!(event.target.classList[1] === 'hidden-tile') && event.target.classList[0] === 'board-tile') {
-    let $current = {}
-    $current = board[event.target.id[4]][event.target.id[13]]
-    $current.isSelected = !$current.isSelected
-    selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
-    if ($current.isSelected === false) {
-      $current = 0
-      selectedTiles = []
-    }
-    if (selectedTiles.length > 1) {
-      board = swapTiles(selectedTiles)
-      selectedTiles = []
-    }
-    let $board = document.getElementById('board-render')
-    $board.removeEventListener('click', selectTile)
-    document.getElementById('game-board').removeChild($board)
-    $board = renderBoard(board)
-    document.getElementById('game-board').appendChild($board)
-    $board.addEventListener('click', selectTile)
+  if (isInvalidTile(event)) {
+    return
   }
+  let $current = {}
+  $current = board[event.target.id[4]][event.target.id[13]]
+  $current.isSelected = !$current.isSelected
+  selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
+  if ($current.isSelected === false) {
+    $current = 0
+    selectedTiles = []
+  }
+  if (selectedTiles.length > 1) {
+    board = swapTiles(selectedTiles)
+    selectedTiles = []
+  }
+  let $board = document.getElementById('board-render')
+  $board.removeEventListener('click', selectTile)
+  document.getElementById('game-board').removeChild($board)
+  $board = renderBoard(board)
+  document.getElementById('game-board').appendChild($board)
+  $board.addEventListener('click', selectTile)
 }
 
+let board = generateBoard(generateTiles())
+
+let goalCandidates = getGoalCandidates(board)
+let goals = defineGoals(goalCandidates)
+board = renderGoals(goals)
+
+let $board = renderBoard(board)
+let $start = document.getElementById('start-button')
+let $container = document.getElementById('container')
+
 let selectedTiles = []
+
 $start.addEventListener('click', startGame)
 $board.addEventListener('click', selectTile)

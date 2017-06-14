@@ -29,6 +29,7 @@ function generateBoard(tiles) {
 
 function renderBoard(board) {
   var $board = document.createElement('div')
+  $board.setAttribute('id', 'board-render')
   for (let i = 0; i < board.length; i++) {
     var $row = renderRow(board[i])
     $board.appendChild($row)
@@ -61,6 +62,15 @@ function renderRow(tiles) {
   return $row
 }
 
+function updateBoard(board) {
+  var $board = document.getElementById('board-render')
+  $board.removeEventListener('click', selectTile)
+  document.getElementById('game-board').removeChild($board)
+  $board = renderBoard(board)
+  document.getElementById('game-board').appendChild($board)
+  $board.addEventListener('click', selectTile)
+}
+
 var board = generateBoard(generateTiles())
 var $board = renderBoard(board)
 var $start = document.getElementById('start-button')
@@ -76,7 +86,10 @@ var startGame = function(event) {
 var selectTile = function(event) {
   if (!(event.target.classList[1] === 'hidden-tile') && event.target.classList[0] === 'board-tile') {
     console.log(event.target)
-    console.log(board[event.target.id[4]][event.target.id[13]])
+    var $current = board[event.target.id[4]][event.target.id[13]]
+    $current.isSelected = !$current.isSelected
+    console.log($current)
+    updateBoard(board)
   }
 }
 

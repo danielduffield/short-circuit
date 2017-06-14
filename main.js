@@ -73,18 +73,6 @@ function updateBoard(board) {
   $board.addEventListener('click', selectTile)
 }
 
-function getSelectedTiles(board) {
-  let selectedTiles = []
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board[i].length; j++) {
-      if (board[i][j].isSelected === true) {
-        selectedTiles.push(board[i][j])
-      }
-    }
-  }
-  return selectedTiles
-}
-
 function swapTiles(coordinates) {
   let i = coordinates[0]
   let j = coordinates[1]
@@ -115,21 +103,19 @@ let selectTile = function(event) {
     let $current = {}
     $current = board[event.target.id[4]][event.target.id[13]]
     $current.isSelected = !$current.isSelected
-    selectedList.push([(event.target.id[4]), (event.target.id[13])])
-    console.log(selectedList)
+    selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
     if ($current.isSelected === false) {
       $current = 0
-      selectedList = []
+      selectedTiles = []
     }
-    let selectedTiles = getSelectedTiles(board)
     if (selectedTiles.length > 1) {
-      swapTiles(selectedList)
-      selectedList = []
+      board = swapTiles(selectedTiles)
+      selectedTiles = []
     }
     updateBoard(board)
   }
 }
 
-let selectedList = []
+let selectedTiles = []
 $start.addEventListener('click', startGame)
 $board.addEventListener('click', selectTile)

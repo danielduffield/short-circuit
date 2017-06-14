@@ -8,7 +8,8 @@ function generateTiles() {
         originRow: i,
         originCol: j,
         isSelected: false,
-        isHidden: false
+        isHidden: false,
+        goal: null
       }
       if (isHidden(tile)) {
         tile.isHidden = true
@@ -59,6 +60,13 @@ function defineGoals(candidates) {
   return goals
 }
 
+function renderGoals(goals) {
+  console.log(goals)
+  goals[0].goal = 'start'
+  goals[1].goal = 'end'
+  return board
+}
+
 function generateBoard(tiles) {
   let row = []
   let board = []
@@ -89,6 +97,14 @@ function renderTile(tile, rowNum) {
   }
   if (tile.isSelected === true) {
     $tile.classList.add('selected')
+  }
+  if (tile.goal) {
+    if (tile.goal === 'start') {
+      $tile.classList.add('start-point')
+    }
+    if (tile.goal === 'end') {
+      $tile.classList.add('end-point')
+    }
   }
   $tile.textContent = 'row-' + tile.originRow + ' column-' + tile.originCol
   return $tile
@@ -151,14 +167,16 @@ let selectTile = function(event) {
 }
 
 let board = generateBoard(generateTiles())
+
+let goalCandidates = getGoalCandidates(board)
+let goals = defineGoals(goalCandidates)
+board = renderGoals(goals)
+
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')
 let $container = document.getElementById('container')
 
 let selectedTiles = []
-
-let goalCandidates = getGoalCandidates(board)
-let goals = defineGoals(goalCandidates)
 
 $start.addEventListener('click', startGame)
 $board.addEventListener('click', selectTile)

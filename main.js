@@ -54,6 +54,11 @@ function defineGoals(candidates) {
   let shuffledCandidates = shuffleArray(candidates)
   let start = shuffledCandidates.pop()
   let end = shuffledCandidates.pop()
+  let distance = distanceCheck(start, end)
+  while (distance < 4) {
+    end = shuffledCandidates.pop()
+    distance = distanceCheck(start, end)
+  }
   let goals = []
   goals.push(start)
   goals.push(end)

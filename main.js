@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -71,7 +69,6 @@ function distanceCheck(start, end) {
 }
 
 function renderGoals(goals) {
-  console.log(goals)
   goals[0].goal = 'start'
   goals[1].goal = 'end'
   return board
@@ -135,8 +132,6 @@ function renderRow(tiles, rowNum) {
 function swapTiles(coordinates) {
   let i = coordinates[0]
   let j = coordinates[1]
-  console.log(i[0], i[1])
-  console.log(j[0], j[1])
   let firstSelected = board[i[0]][i[1]]
   let secondSelected = board[j[0]][j[1]]
   board[i[0]][i[1]] = secondSelected

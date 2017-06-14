@@ -1,30 +1,15 @@
-function Tile(row, column, isHidden) {
-  this.row = row
-  this.column = column
-  if (row === 0 || row === 7 || column === 0 || column === 7) {
-    isHidden = true
-  }
-  else {
-    isHidden = false
-  }
-}
-
 function generateTiles() {
-  this.row = [0, 1, 2, 3, 4, 5, 6, 7]
-  this.column = [0, 1, 2, 3, 4, 5, 6, 7]
   var tiles = []
-
-  for (let i = 0; i < this.row.length; i++) {
-    for (let j = 0; j < this.column.length; j++) {
-      tiles.push(new Tile(this.row[i], this.column[j]))
-    }
-  }
-  for (let i = 0; i < tiles.length; i++) {
-    if (tiles[i].row === 0 || tiles[i].row === 7 || tiles[i].column === 0 || tiles[i].column === 7) {
-      tiles[i].isHidden = true
-    }
-    else {
-      tiles[i].isHidden = false
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      var tile = {}
+      tile.row = i
+      tile.column = j
+      tile.isHidden = false
+      if (tile.row === 0 || tile.row === 7 || tile.column === 0 || tile.column === 7) {
+        tile.isHidden = true
+      }
+      tiles.push(tile)
     }
   }
   return tiles

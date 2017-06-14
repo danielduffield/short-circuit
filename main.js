@@ -64,15 +64,6 @@ function renderRow(tiles, rowNum) {
   return $row
 }
 
-function updateBoard(board) {
-  let $board = document.getElementById('board-render')
-  $board.removeEventListener('click', selectTile)
-  document.getElementById('game-board').removeChild($board)
-  $board = renderBoard(board)
-  document.getElementById('game-board').appendChild($board)
-  $board.addEventListener('click', selectTile)
-}
-
 function swapTiles(coordinates) {
   let i = coordinates[0]
   let j = coordinates[1]
@@ -112,7 +103,12 @@ let selectTile = function(event) {
       board = swapTiles(selectedTiles)
       selectedTiles = []
     }
-    updateBoard(board)
+    let $board = document.getElementById('board-render')
+    $board.removeEventListener('click', selectTile)
+    document.getElementById('game-board').removeChild($board)
+    $board = renderBoard(board)
+    document.getElementById('game-board').appendChild($board)
+    $board.addEventListener('click', selectTile)
   }
 }
 

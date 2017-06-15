@@ -39,6 +39,38 @@ function getGoalCandidates(board) {
   return candidates
 }
 
+function generateChannels(tiles) {
+  for (let i = 0; i < tiles.length; i++) {
+    let random = Math.floor(Math.random() * 7)
+    switch (random) {
+      case 0:
+        tiles[i].channels = 'dead-tile'
+        break
+      case 1:
+        tiles[i].channels = 'north-south'
+        break
+      case 2:
+        tiles[i].channels = 'east-west'
+        break
+      case 3:
+        tiles[i].channels = 'north-east'
+        break
+      case 4:
+        tiles[i].channels = 'north-west'
+        break
+      case 5:
+        tiles[i].channels = 'south-east'
+        break
+      case 6:
+        tiles[i].channels = 'south-west'
+        break
+      default:
+        tiles[i].channels = 'null'
+    }
+  }
+  return tiles
+}
+
 function shuffleArray(array) {
   let shuffled = array.slice()
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -173,7 +205,9 @@ let selectTile = function(event) {
   $board.addEventListener('click', selectTile)
 }
 
-let board = generateBoard(generateTiles())
+let tiles = generateTiles()
+tiles = generateChannels(tiles)
+let board = generateBoard(tiles)
 
 let goalCandidates = getGoalCandidates(board)
 let goals = defineGoals(goalCandidates)

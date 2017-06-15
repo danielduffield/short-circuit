@@ -13,6 +13,7 @@ function generateTiles() {
       if (isHidden(tile)) {
         tile.isHidden = true
       }
+      tile.channels = generateChannel(tile)
       tiles.push(tile)
     }
   }
@@ -39,36 +40,34 @@ function getGoalCandidates(board) {
   return candidates
 }
 
-function generateChannels(tiles) {
-  for (let i = 0; i < tiles.length; i++) {
-    let random = Math.floor(Math.random() * 7)
-    switch (random) {
-      case 0:
-        tiles[i].channels = 'dead-tile'
-        break
-      case 1:
-        tiles[i].channels = 'north-south'
-        break
-      case 2:
-        tiles[i].channels = 'east-west'
-        break
-      case 3:
-        tiles[i].channels = 'north-east'
-        break
-      case 4:
-        tiles[i].channels = 'north-west'
-        break
-      case 5:
-        tiles[i].channels = 'south-east'
-        break
-      case 6:
-        tiles[i].channels = 'south-west'
-        break
-      default:
-        tiles[i].channels = 'null'
-    }
+function generateChannel(tile) {
+  let random = Math.floor(Math.random() * 7)
+  switch (random) {
+    case 0:
+      tile.channels = 'dead-tile'
+      break
+    case 1:
+      tile.channels = 'north-south'
+      break
+    case 2:
+      tile.channels = 'east-west'
+      break
+    case 3:
+      tile.channels = 'north-east'
+      break
+    case 4:
+      tile.channels = 'north-west'
+      break
+    case 5:
+      tile.channels = 'south-east'
+      break
+    case 6:
+      tile.channels = 'south-west'
+      break
+    default:
+      tile.channels = 'null'
   }
-  return tiles
+  return tile.channels
 }
 
 function shuffleArray(array) {
@@ -218,7 +217,6 @@ let selectTile = function(event) {
 }
 
 let tiles = generateTiles()
-tiles = generateChannels(tiles)
 let board = generateBoard(tiles)
 
 let goalCandidates = getGoalCandidates(board)

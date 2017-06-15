@@ -143,6 +143,10 @@ function renderTile(tile, rowNum) {
     $tile.classList.add(tile.goal)
   }
   $tile.textContent = 'row-' + tile.originRow + ' column-' + tile.originCol
+  if (!isHidden(tile)) {
+    let $tileImage = renderTileImage(tile)
+    $tile.appendChild($tileImage)
+  }
   return $tile
 }
 
@@ -156,6 +160,13 @@ function renderRow(tiles, rowNum) {
     $row.appendChild($tile)
   }
   return $row
+}
+
+function renderTileImage(tile) {
+  let $tileImage = new Image(60, 60)
+  $tileImage.src = 'images/channels-rough/' + tile.channels + '.png'
+  $tileImage.classList.add('channel-render')
+  return $tileImage
 }
 
 function swapTiles(coordinates) {

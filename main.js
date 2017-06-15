@@ -7,6 +7,7 @@ function generateTiles() {
         originCol: j,
         isSelected: false,
         isHidden: false,
+        channels: null,
         goal: null
       }
       if (isHidden(tile)) {
@@ -154,6 +155,7 @@ let selectTile = function(event) {
   let $current = {}
   $current = board[event.target.id[4]][event.target.id[13]]
   $current.isSelected = !$current.isSelected
+  console.log($current)
   selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
   if ($current.isSelected === false) {
     $current = 0

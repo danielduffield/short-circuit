@@ -3,35 +3,23 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'VT323', monospace;
-}
-
-#landing {
-  height: 100%;
-  width: 100%;
   background-color: whitesmoke;
-  position: absolute;
-  z-index: -100;
 }
 
 #container {
-  margin: 0 auto;
-  width: 90%;
-  height: 100%;
-  background-color: whitesmoke;
-  z-index: 0;
   text-align: center;
-  min-width: 683px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 h1 {
+  text-align: center;
   font-family: 'Share Tech Mono', monospace;
   font-size: 3em;
   padding: 20px 0 0;
 }
 
 .board-row {
-  height: 77px;
-  width: 100%;
   overflow: hidden;
 }
 
@@ -40,26 +28,20 @@ h1 {
   height: 77px;
   background-color: lightblue;
   border: 1px solid grey;
-  z-index: 1;
-  display: inline-block;
   border-radius: 5px;
-  font-size: 0;
+  float: left;
 }
 
 .hidden-tile {
   border: 1px solid whitesmoke;
   background-color: whitesmoke;
-  color: whitesmoke;
-  left: 10%;
+  border-radius: 0;
 }
 
 #game-board {
-  text-align: center;
-  width: 100%;
-  margin-bottom: 100%;
-  position: fixed;
+  margin: 100px auto;
+  width: 616px;
   font-size: 0;
-  top: 13%;
 }
 
 #start-button {
@@ -72,8 +54,8 @@ h1 {
 }
 
 .channel-render {
-  margin: 0;
   background-color: yellow;
+  margin: 8px;
 }
 
 .selected {

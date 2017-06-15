@@ -143,10 +143,6 @@ function renderTile(tile, rowNum) {
     $tile.classList.add(tile.goal)
   }
   $tile.textContent = 'row-' + tile.originRow + ' column-' + tile.originCol
-  if (!isHidden(tile)) {
-    let $tileImage = renderTileImage(tile)
-    $tile.appendChild($tileImage)
-  }
   return $tile
 }
 
@@ -157,15 +153,20 @@ function renderRow(tiles, rowNum) {
   for (let i = 0; i < tiles.length; i++) {
     let $tile = renderTile(tiles[i], rowNum)
     $tile.setAttribute('id', 'row-' + rowNum + ' column-' + i)
+    if (!isHidden(tiles[i])) {
+      let $tileImage = renderTileImage(tiles[i], $tile)
+      $tile.appendChild($tileImage)
+    }
     $row.appendChild($tile)
   }
   return $row
 }
 
-function renderTileImage(tile) {
+function renderTileImage(tile, $tile) {
   let $tileImage = new Image(60, 60)
   $tileImage.src = 'images/channels-rough/' + tile.channels + '.png'
   $tileImage.classList.add('channel-render')
+  $tileImage.setAttribute('id', 'row-' + $tile.id[4] + ' column-' + $tile.id[13] + 'image')
   return $tileImage
 }
 
@@ -182,7 +183,7 @@ function swapTiles(coordinates) {
 }
 
 function isInvalidTile(event) {
-  return ((event.target.classList[1] === 'hidden-tile') || !(event.target.classList[0] === 'board-tile'))
+  return ((event.target.classList[1] === 'hidden-tile') || !(event.target.classList[0] === 'board-tile')) && !(event.target.classList[0] === 'channel-render')
 }
 
 let startGame = function(event) {
@@ -198,8 +199,8 @@ let selectTile = function(event) {
   let $current = {}
   $current = board[event.target.id[4]][event.target.id[13]]
   $current.isSelected = !$current.isSelected
-  console.log($current)
   selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
+  console.log($current)
   if ($current.isSelected === false) {
     $current = 0
     selectedTiles = []

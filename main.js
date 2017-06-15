@@ -90,21 +90,14 @@ function defineGoals(candidates) {
     end = shuffledCandidates.pop()
     distance = distanceCheck(start, end)
   }
-  let goals = []
-  goals.push(start)
-  goals.push(end)
-  return goals
+  start.goal = 'start-point'
+  end.goal = 'end-point'
+  return board
 }
 
 function distanceCheck(start, end) {
   let distance = Math.hypot((start.originCol - end.originCol), (start.originRow - end.originRow))
   return distance
-}
-
-function renderGoals(goals) {
-  goals[0].goal = 'start-point'
-  goals[1].goal = 'end-point'
-  return board
 }
 
 function generateBoard(tiles) {
@@ -224,8 +217,8 @@ let tiles = generateTiles()
 let board = generateBoard(tiles)
 
 let goalCandidates = getGoalCandidates(board)
-let goals = defineGoals(goalCandidates)
-board = renderGoals(goals)
+
+board = defineGoals(goalCandidates)
 
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')

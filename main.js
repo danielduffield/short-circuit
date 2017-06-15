@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -94,6 +96,39 @@ function defineGoals(candidates) {
   end.goal = 'end-point'
   return board
 }
+
+function findAdjacentTiles(coords) {
+  let adjacentCandidates = []
+  let adjacentTiles = []
+  let y = coords[0]
+  let x = coords[1]
+  adjacentCandidates = [
+    [x + 1, y],
+    [x - 1, y],
+    [x, y + 1],
+    [x, y - 1]
+  ]
+  console.log('adjacentCandidates', adjacentCandidates)
+  for (let i = 0; i < adjacentCandidates.length; i++) {
+    let currentCoords = adjacentCandidates[i]
+    if (!(currentCoords[0] < 1 || currentCoords[0] > 6 || currentCoords[1] < 1 || currentCoords[1] > 6)) {
+      adjacentTiles.push(currentCoords)
+    }
+  }
+  return adjacentTiles
+}
+
+/*
+function checkGoalBlockage(goals) {
+  let startCoords = []
+  let endCoords = []
+  startCoords.push(goals[0].originRow)
+  startCoords.push(goals[0].originCol)
+  endCoords.push(goals[1].originRow)
+  endCoords.push(goals[1].originCol)
+}
+
+*/
 
 function distanceCheck(start, end) {
   let distance = Math.hypot((start.originCol - end.originCol), (start.originRow - end.originRow))

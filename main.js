@@ -154,6 +154,10 @@ function renderRow(tiles, rowNum) {
     $tile.setAttribute('id', 'row-' + rowNum + ' column-' + i)
     if (!isHidden(tiles[i])) {
       let $tileImage = renderTileImage(tiles[i], $tile)
+      if (tiles[i].channels === 'dead-tile') {
+        $tileImage.classList.add('dead-tile')
+        $tile.classList.add('dead-tile')
+      }
       $tile.appendChild($tileImage)
     }
     $row.appendChild($tile)
@@ -165,7 +169,7 @@ function renderTileImage(tile, $tile) {
   let $tileImage = new Image(60, 60)
   $tileImage.src = 'images/channels-rough/' + tile.channels + '.png'
   $tileImage.classList.add('channel-render')
-  $tileImage.setAttribute('id', 'row-' + $tile.id[4] + ' column-' + $tile.id[13] + 'image')
+  $tileImage.setAttribute('id', 'row-' + $tile.id[4] + ' column-' + $tile.id[13] + ' image')
   return $tileImage
 }
 
@@ -182,7 +186,7 @@ function swapTiles(coordinates) {
 }
 
 function isInvalidTile(event) {
-  return ((event.target.classList[1] === 'hidden-tile') || !(event.target.classList[0] === 'board-tile')) && !(event.target.classList[0] === 'channel-render')
+  return (event.target.classList[1] === 'dead-tile') || (event.target.classList[1] === 'hidden-tile') || (!(event.target.classList[0] === 'board-tile') && !(event.target.classList[0] === 'channel-render'))
 }
 
 let startGame = function(event) {

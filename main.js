@@ -260,19 +260,48 @@ function getValidChannels(coordinates) {
   })
   return keys
 }
-/*
-function findChargePath(chargeCoordinates) {
-  let adjacent = findAdjacentTiles(chargeCoordinates)
-  let validChannels = getValidChannels(chargeCoordinates)
-  for (let i = 0; i < validChannels.length; i++) {
-    if (validChannels[i] === 'north') {
-      if (adjacent[0] && adjacent[0][0]) {
 
+function isValidChargePath(tile) {
+  return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false
+}
+
+function findChargePath(chargeCoordinates) {
+  let inChargePath = chargeCoordinates
+  while (inChargePath) {
+    let adjacent = findAdjacentTiles(inChargePath)
+    let validChannels = getValidChannels(inChargePath)
+    for (let i = 0; i < validChannels.length; i++) {
+      if (validChannels[i] === 'north' && adjacent[0]) {
+        let northOneTile = board[adjacent[0][0]][adjacent[0][1]]
+        if (isValidChargePath(northOneTile) && northOneTile.channels.south === true) {
+          northOneTile.chargeStatus.chargeAligned = true
+          inChargePath = adjacent[0]
+        }
+      }
+      if (validChannels[i] === 'south' && adjacent[1]) {
+        let southOneTile = board[adjacent[1][0]][adjacent[1][1]]
+        if (isValidChargePath(southOneTile) && southOneTile.channels.north === true) {
+          southOneTile.chargeStatus.chargeAligned = true
+          inChargePath = adjacent[1]
+        }
+      }
+      if (validChannels[i] === 'east' && adjacent[2]) {
+        let eastOneTile = board[adjacent[2][0]][adjacent[2][1]]
+        if (isValidChargePath(eastOneTile) && eastOneTile.channels.west === true) {
+          eastOneTile.chargeStatus.chargeAligned = true
+          inChargePath = adjacent[2]
+        }
+      }
+      if (validChannels[i] === 'west' && adjacent[3]) {
+        let westOneTile = board[adjacent[3][0]][adjacent[3][1]]
+        if (isValidChargePath(westOneTile) && westOneTile.channels.east === true) {
+          westOneTile.chargeStatus.chargeAligned = true
+          inChargePath = adjacent[3]
+        }
       }
     }
   }
 }
-*/
 
 let startGame = function(event) {
   document.getElementById('game-board').appendChild($board)

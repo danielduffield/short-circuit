@@ -7,7 +7,13 @@ function generateTiles() {
         originCol: j,
         isSelected: false,
         isHidden: false,
-        channels: null,
+        image: null,
+        channels: {
+          north: false,
+          south: false,
+          east: false,
+          west: false
+        },
         goal: null,
         chargeStatus: {
           charged: false,
@@ -18,7 +24,7 @@ function generateTiles() {
       if (isHidden(tile)) {
         tile.isHidden = true
       }
-      tile.channels = generateChannel(tile)
+      tile.image = generateChannel(tile)
       tiles.push(tile)
     }
   }
@@ -49,30 +55,42 @@ function generateChannel(tile) {
   let random = Math.floor(Math.random() * 7)
   switch (random) {
     case 0:
-      tile.channels = 'dead-tile'
+      tile.image = 'dead-tile'
       break
     case 1:
-      tile.channels = 'north-south'
+      tile.image = 'north-south'
+      tile.channels.north = true
+      tile.channels.south = true
       break
     case 2:
-      tile.channels = 'east-west'
+      tile.image = 'east-west'
+      tile.channels.east = true
+      tile.channels.west = true
       break
     case 3:
-      tile.channels = 'north-east'
+      tile.image = 'north-east'
+      tile.channels.north = true
+      tile.channels.east = true
       break
     case 4:
-      tile.channels = 'north-west'
+      tile.image = 'north-west'
+      tile.channels.north = true
+      tile.channels.west = true
       break
     case 5:
-      tile.channels = 'south-east'
+      tile.image = 'south-east'
+      tile.channels.south = true
+      tile.channels.east = true
       break
     case 6:
-      tile.channels = 'south-west'
+      tile.image = 'south-west'
+      tile.channels.south = true
+      tile.channels.west = true
       break
     default:
-      tile.channels = 'null'
+      tile.image = 'null'
   }
-  return tile.channels
+  return tile.image
 }
 
 function shuffleArray(array) {
@@ -126,8 +144,8 @@ function findAdjacentTiles(coords) {
 function checkGoalObstruction(goalCoordinates) {
   for (let i = 0; i < 2; i++) {
     let adjacent = findAdjacentTiles(goalCoordinates[i])
-    while ((board[adjacent[0][0]][adjacent[0][1]]).channels === 'dead-tile') {
-      (board[adjacent[0][0]][adjacent[0][1]]).channels = generateChannel(board[adjacent[0][0]][adjacent[0][1]])
+    while ((board[adjacent[0][0]][adjacent[0][1]]).image === 'dead-tile') {
+      (board[adjacent[0][0]][adjacent[0][1]]).image = generateChannel(board[adjacent[0][0]][adjacent[0][1]])
     }
   }
   return board
@@ -188,7 +206,7 @@ function renderRow(tiles, rowNum) {
       if (tiles[i].isSelected === true) {
         $tileImage.classList.add('selected')
       }
-      if (tiles[i].channels === 'dead-tile') {
+      if (tiles[i].image === 'dead-tile') {
         $tileImage.classList.add('dead-tile')
         $tile.classList.add('dead-tile')
       }
@@ -201,7 +219,7 @@ function renderRow(tiles, rowNum) {
 
 function renderTileImage(tile, $tile) {
   let $tileImage = new Image(60, 60)
-  $tileImage.src = 'images/channels-rough/' + tile.channels + '.png'
+  $tileImage.src = 'images/channels-rough/' + tile.image + '.png'
   $tileImage.classList.add('channel-render')
   $tileImage.setAttribute('id', 'row-' + $tile.id[4] + ' column-' + $tile.id[13] + ' image')
   return $tileImage

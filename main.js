@@ -143,7 +143,6 @@ function findAdjacentTiles(coords) {
       adjacentTiles.push(null)
     }
   }
-  console.log(adjacentTiles)
   return adjacentTiles
 }
 
@@ -254,51 +253,75 @@ function isInvalidTile(event) {
 }
 
 function getValidChannels(coordinates) {
-  let keys = Object.keys(board[coordinates[0]][coordinates[1]].channels)
-  keys = keys.filter(function (key) {
+  let validChannels = Object.keys(board[coordinates[0]][coordinates[1]].channels)
+  validChannels = validChannels.filter(function (key) {
     return board[coordinates[0]][coordinates[1]].channels[key] === true
   })
-  return keys
+  for (let i = 0; i < validChannels.length; i++) {
+    switch (validChannels[i]) {
+      case 'north':
+        validChannels[i] = 0
+        break
+      case 'south':
+        validChannels[i] = 1
+        break
+      case 'east':
+        validChannels[i] = 2
+        break
+      case 'west':
+        validChannels[i] = 3
+    }
+  }
+  return validChannels
 }
 
 function isValidChargePath(tile) {
-  return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false
+  return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false && tile.chargeStatus.charged === false
+}
+
+function getOppositeDirection(validChannel) {
+  let channelOpposite = null
+  switch (validChannel) {
+    case 0:
+      channelOpposite = 'south'
+      break
+    case 1:
+      channelOpposite = 'north'
+      break
+    case 2:
+      channelOpposite = 'west'
+      break
+    case 3:
+      channelOpposite = 'east'
+      break
+  }
+  return channelOpposite
 }
 
 function findChargePath(chargeCoordinates) {
+  board[chargeCoordinates[0]][chargeCoordinates[1]].chargeStatus.charged = true
   let inChargePath = chargeCoordinates
+  let lastChargedTile = 0
   while (inChargePath) {
+    console.log('loop begins')
     let adjacent = findAdjacentTiles(inChargePath)
     let validChannels = getValidChannels(inChargePath)
     for (let i = 0; i < validChannels.length; i++) {
-      if (validChannels[i] === 'north' && adjacent[0]) {
-        let northOneTile = board[adjacent[0][0]][adjacent[0][1]]
-        if (isValidChargePath(northOneTile) && northOneTile.channels.south === true) {
-          northOneTile.chargeStatus.chargeAligned = true
-          inChargePath = adjacent[0]
+      lastChargedTile = inChargePath
+      let channelOpposite = getOppositeDirection(validChannels[i])
+      if (adjacent[validChannels[i]]) {   // if a tile exists in the direction of a valid channel
+        let adjacentTile = board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]] // adjacentTile is assigned the value of tile
+        console.log(adjacentTile.channels.channelOpposite)
+        if (isValidChargePath(adjacentTile) && adjacentTile.channels.channelOpposite === true) { // if adjacentTile is valid/has channel connect
+          console.log('conditions satisfied for charge alignment')
+          adjacentTile.chargeStatus.chargeAligned = true // change that tile to be charge aligned
+          inChargePath = adjacent[validChannels[i]] // set that tile as the new charge pathfinding start point and re-loop
+          console.log('charge path updated to ', inChargePath)
         }
       }
-      if (validChannels[i] === 'south' && adjacent[1]) {
-        let southOneTile = board[adjacent[1][0]][adjacent[1][1]]
-        if (isValidChargePath(southOneTile) && southOneTile.channels.north === true) {
-          southOneTile.chargeStatus.chargeAligned = true
-          inChargePath = adjacent[1]
-        }
-      }
-      if (validChannels[i] === 'east' && adjacent[2]) {
-        let eastOneTile = board[adjacent[2][0]][adjacent[2][1]]
-        if (isValidChargePath(eastOneTile) && eastOneTile.channels.west === true) {
-          eastOneTile.chargeStatus.chargeAligned = true
-          inChargePath = adjacent[2]
-        }
-      }
-      if (validChannels[i] === 'west' && adjacent[3]) {
-        let westOneTile = board[adjacent[3][0]][adjacent[3][1]]
-        if (isValidChargePath(westOneTile) && westOneTile.channels.east === true) {
-          westOneTile.chargeStatus.chargeAligned = true
-          inChargePath = adjacent[3]
-        }
-      }
+    }
+    if (lastChargedTile === inChargePath) {
+      inChargePath = null
     }
   }
 }

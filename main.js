@@ -7,11 +7,13 @@ function generateTiles() {
         originCol: j,
         isSelected: false,
         isHidden: false,
+        channels: null,
         goal: null
       }
       if (isHidden(tile)) {
         tile.isHidden = true
       }
+      tile.channels = generateChannel(tile)
       tiles.push(tile)
     }
   }
@@ -38,6 +40,36 @@ function getGoalCandidates(board) {
   return candidates
 }
 
+function generateChannel(tile) {
+  let random = Math.floor(Math.random() * 7)
+  switch (random) {
+    case 0:
+      tile.channels = 'dead-tile'
+      break
+    case 1:
+      tile.channels = 'north-south'
+      break
+    case 2:
+      tile.channels = 'east-west'
+      break
+    case 3:
+      tile.channels = 'north-east'
+      break
+    case 4:
+      tile.channels = 'north-west'
+      break
+    case 5:
+      tile.channels = 'south-east'
+      break
+    case 6:
+      tile.channels = 'south-west'
+      break
+    default:
+      tile.channels = 'null'
+  }
+  return tile.channels
+}
+
 function shuffleArray(array) {
   let shuffled = array.slice()
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -58,21 +90,47 @@ function defineGoals(candidates) {
     end = shuffledCandidates.pop()
     distance = distanceCheck(start, end)
   }
-  let goals = []
-  goals.push(start)
-  goals.push(end)
-  return goals
+  start.goal = 'start-point'
+  end.goal = 'end-point'
+  let goalCoordinates = []
+  goalCoordinates.push([start.originRow, start.originCol])
+  goalCoordinates.push([end.originRow, end.originCol])
+  return goalCoordinates
+}
+
+function findAdjacentTiles(coords) {
+  let adjacentCandidates = []
+  let adjacentTiles = []
+  let x = coords[0]
+  let y = coords[1]
+  adjacentCandidates = [
+    [x + 1, y],
+    [x - 1, y],
+    [x, y + 1],
+    [x, y - 1]
+  ]
+  for (let i = 0; i < adjacentCandidates.length; i++) {
+    let currentCoords = adjacentCandidates[i]
+    if (!(currentCoords[0] < 1 || currentCoords[0] > 6 || currentCoords[1] < 1 || currentCoords[1] > 6)) {
+      adjacentTiles.push(currentCoords)
+    }
+  }
+  return adjacentTiles
+}
+
+function checkGoalObstruction(goalCoordinates) {
+  for (let i = 0; i < 2; i++) {
+    let adjacent = findAdjacentTiles(goalCoordinates[i])
+    while ((board[adjacent[0][0]][adjacent[0][1]]).channels === 'dead-tile') {
+      (board[adjacent[0][0]][adjacent[0][1]]).channels = generateChannel(board[adjacent[0][0]][adjacent[0][1]])
+    }
+  }
+  return board
 }
 
 function distanceCheck(start, end) {
   let distance = Math.hypot((start.originCol - end.originCol), (start.originRow - end.originRow))
   return distance
-}
-
-function renderGoals(goals) {
-  goals[0].goal = 'start-point'
-  goals[1].goal = 'end-point'
-  return board
 }
 
 function generateBoard(tiles) {
@@ -120,9 +178,28 @@ function renderRow(tiles, rowNum) {
   for (let i = 0; i < tiles.length; i++) {
     let $tile = renderTile(tiles[i], rowNum)
     $tile.setAttribute('id', 'row-' + rowNum + ' column-' + i)
+    if (!isHidden(tiles[i])) {
+      let $tileImage = renderTileImage(tiles[i], $tile)
+      if (tiles[i].isSelected === true) {
+        $tileImage.classList.add('selected')
+      }
+      if (tiles[i].channels === 'dead-tile') {
+        $tileImage.classList.add('dead-tile')
+        $tile.classList.add('dead-tile')
+      }
+      $tile.appendChild($tileImage)
+    }
     $row.appendChild($tile)
   }
   return $row
+}
+
+function renderTileImage(tile, $tile) {
+  let $tileImage = new Image(60, 60)
+  $tileImage.src = 'images/channels-rough/' + tile.channels + '.png'
+  $tileImage.classList.add('channel-render')
+  $tileImage.setAttribute('id', 'row-' + $tile.id[4] + ' column-' + $tile.id[13] + ' image')
+  return $tileImage
 }
 
 function swapTiles(coordinates) {
@@ -138,7 +215,7 @@ function swapTiles(coordinates) {
 }
 
 function isInvalidTile(event) {
-  return ((event.target.classList[1] === 'hidden-tile') || !(event.target.classList[0] === 'board-tile'))
+  return (event.target.classList[1] === 'dead-tile') || (event.target.classList[1] === 'hidden-tile') || (!(event.target.classList[0] === 'board-tile') && !(event.target.classList[0] === 'channel-render'))
 }
 
 let startGame = function(event) {
@@ -151,12 +228,12 @@ let selectTile = function(event) {
   if (isInvalidTile(event)) {
     return
   }
-  let $current = {}
-  $current = board[event.target.id[4]][event.target.id[13]]
-  $current.isSelected = !$current.isSelected
+  let current = {}
+  current = board[event.target.id[4]][event.target.id[13]]
+  current.isSelected = !current.isSelected
   selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
-  if ($current.isSelected === false) {
-    $current = 0
+  if (current.isSelected === false) {
+    current = 0
     selectedTiles = []
   }
   if (selectedTiles.length > 1) {
@@ -171,11 +248,13 @@ let selectTile = function(event) {
   $board.addEventListener('click', selectTile)
 }
 
-let board = generateBoard(generateTiles())
+let tiles = generateTiles()
+let board = generateBoard(tiles)
 
 let goalCandidates = getGoalCandidates(board)
-let goals = defineGoals(goalCandidates)
-board = renderGoals(goals)
+
+let goalCoordinates = defineGoals(goalCandidates)
+board = checkGoalObstruction(goalCoordinates)
 
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')

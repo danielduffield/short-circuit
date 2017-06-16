@@ -303,12 +303,9 @@ function findChargePath(chargeCoordinates) {
   let inChargePath = chargeCoordinates
   let lastChargedTile = 0
   while (inChargePath) {
-    console.log('loop begins')
     let adjacent = findAdjacentTiles(inChargePath)
     let validChannels = getValidChannels(inChargePath)
-    console.log('last charged tile about to be rewritten ', lastChargedTile)
     lastChargedTile = inChargePath
-    console.log('new last charged ', lastChargedTile)
     for (let i = 0; i < validChannels.length; i++) {
       let channelOpposite = getOppositeDirection(validChannels[i])
       if (adjacent[validChannels[i]]) {   // if a tile exists in the direction of a valid channel
@@ -316,7 +313,6 @@ function findChargePath(chargeCoordinates) {
         if (isValidChargePath(adjacentTile) && adjacentTile.channels[channelOpposite] === true) { // if adjacentTile is valid/has channel connect
           adjacentTile.chargeStatus.chargeAligned = true // change that tile to be charge aligned
           inChargePath = adjacent[validChannels[i]] // set that tile as the new charge pathfinding start point and re-loop
-          console.log('charge path updated to ', inChargePath)
         }
       }
     }
@@ -324,7 +320,23 @@ function findChargePath(chargeCoordinates) {
       inChargePath = null
     }
   }
-  console.log('done')
+}
+
+function moveChargeOneTile(chargeCoordinates) {
+  let currentChargeCoordinates = chargeCoordinates
+  let currentlyChargedTile = board[chargeCoordinates[0]][chargeCoordinates[1]]
+  let adjacent = findAdjacentTiles(chargeCoordinates)
+  for (let i = 0; i < adjacent.length; i++) {
+    let adjacentTile = board[adjacent[i][0]][adjacent[i][1]]
+    if (adjacentTile.chargeStatus.chargeAligned === true) {
+      currentlyChargedTile.chargeStatus.charged = false
+      currentlyChargedTile.chargeStatus.spent = true
+      adjacentTile.chargeStatus.chargeAligned = false
+      adjacentTile.chargeStatus.charged = true
+      currentChargeCoordinates = adjacent[i]
+    }
+  }
+  return currentChargeCoordinates
 }
 
 let startGame = function(event) {

@@ -129,10 +129,10 @@ function findAdjacentTiles(coords) {
   let x = coords[0]
   let y = coords[1]
   adjacentCandidates = [
-    [x + 1, y], // east
-    [x - 1, y], // west
     [x, y + 1], // north
-    [x, y - 1] // south
+    [x, y - 1], // south
+    [x + 1, y], // east
+    [x - 1, y] // west
   ]
   for (let i = 0; i < adjacentCandidates.length; i++) {
     let currentCoords = adjacentCandidates[i]
@@ -258,6 +258,11 @@ function getValidChannels(coordinates) {
     return board[coordinates[0]][coordinates[1]].channels[key] === true
   })
   return keys
+}
+
+function findChargePath(chargeCoordinates) {
+  let adjacent = findAdjacentTiles(chargeCoordinates)
+  let validChannels = getValidChannels(chargeCoordinates)
 }
 
 let startGame = function(event) {

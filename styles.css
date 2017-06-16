@@ -3,7 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'VT323', monospace;
-  background-color: whitesmoke;
+  background-color: lightblue;
 }
 
 #container {
@@ -26,15 +26,14 @@ h1 {
 .board-tile {
   width: 77px;
   height: 77px;
-  background-color: lightblue;
-  border: 1px solid grey;
-  border-radius: 5px;
+  background-color: darkblue;
+  border: 2px solid blue;
   float: left;
 }
 
 .hidden-tile {
-  border: 1px solid whitesmoke;
-  background-color: whitesmoke;
+  background-color: lightblue;
+  border: 1px solid lightblue;
   border-radius: 0;
 }
 
@@ -54,8 +53,12 @@ h1 {
 }
 
 .channel-render {
-  background-color: yellow;
+  background-color: palegoldenrod;
   margin: 8px;
+}
+
+.selected.channel-render {
+  background-color: gold;
 }
 
 .selected {

@@ -24,7 +24,7 @@ function generateTiles() {
       if (isHidden(tile)) {
         tile.isHidden = true
       }
-      tile.image = generateChannel(tile)
+      tile.channels = generateChannel(tile)
       tiles.push(tile)
     }
   }
@@ -90,7 +90,7 @@ function generateChannel(tile) {
     default:
       tile.image = 'null'
   }
-  return tile.image
+  return tile.channels
 }
 
 function shuffleArray(array) {
@@ -127,15 +127,18 @@ function findAdjacentTiles(coords) {
   let x = coords[0]
   let y = coords[1]
   adjacentCandidates = [
-    [x + 1, y],
-    [x - 1, y],
-    [x, y + 1],
-    [x, y - 1]
+    [x + 1, y], // east
+    [x - 1, y], // west
+    [x, y + 1], // north
+    [x, y - 1] // south
   ]
   for (let i = 0; i < adjacentCandidates.length; i++) {
     let currentCoords = adjacentCandidates[i]
     if (!(currentCoords[0] < 1 || currentCoords[0] > 6 || currentCoords[1] < 1 || currentCoords[1] > 6)) {
       adjacentTiles.push(currentCoords)
+    }
+    else {
+      adjacentTiles.push(null)
     }
   }
   return adjacentTiles
@@ -144,8 +147,14 @@ function findAdjacentTiles(coords) {
 function checkGoalObstruction(goalCoordinates) {
   for (let i = 0; i < 2; i++) {
     let adjacent = findAdjacentTiles(goalCoordinates[i])
-    while ((board[adjacent[0][0]][adjacent[0][1]]).image === 'dead-tile') {
-      (board[adjacent[0][0]][adjacent[0][1]]).image = generateChannel(board[adjacent[0][0]][adjacent[0][1]])
+    let keepUnblocked = []
+    for (let j = 0; j < adjacent.length; j++) {
+      if (adjacent[j]) {
+        keepUnblocked = adjacent[j]
+      }
+    }
+    while ((board[keepUnblocked[0]][keepUnblocked[1]]).image === 'dead-tile') {
+      (board[keepUnblocked[0]][keepUnblocked[1]]).channels = generateChannel(board[keepUnblocked[0]][keepUnblocked[1]])
     }
   }
   return board

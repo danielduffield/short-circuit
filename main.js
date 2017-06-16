@@ -8,7 +8,12 @@ function generateTiles() {
         isSelected: false,
         isHidden: false,
         channels: null,
-        goal: null
+        goal: null,
+        chargeStatus: {
+          charged: false,
+          chargeAligned: false,
+          spent: false
+        }
       }
       if (isHidden(tile)) {
         tile.isHidden = true
@@ -232,6 +237,7 @@ let selectTile = function(event) {
   current = board[event.target.id[4]][event.target.id[13]]
   current.isSelected = !current.isSelected
   selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
+  console.log(current)
   if (current.isSelected === false) {
     current = 0
     selectedTiles = []

@@ -101,13 +101,13 @@ function defineGoals(candidates) {
 function findAdjacentTiles(coords) {
   let adjacentCandidates = []
   let adjacentTiles = []
-  let y = coords[0]
-  let x = coords[1]
+  let x = coords[0]
+  let y = coords[1]
   adjacentCandidates = [
-    (x + 1, y),
-    (x - 1, y),
-    (x, y + 1),
-    (x, y - 1)
+    [x + 1, y],
+    [x - 1, y],
+    [x, y + 1],
+    [x, y - 1]
   ]
   for (let i = 0; i < adjacentCandidates.length; i++) {
     let currentCoords = adjacentCandidates[i]
@@ -118,16 +118,11 @@ function findAdjacentTiles(coords) {
   return adjacentTiles
 }
 
-function checkGoalBlockage(goalCoordinates) {
-  console.log(goalCoordinates)
+function checkGoalObstruction(goalCoordinates) {
   for (let i = 0; i < 2; i++) {
     let adjacent = findAdjacentTiles(goalCoordinates[i])
-    console.log('adjacent 0, 1', adjacent[0], adjacent[1])
-    console.log('adjacent 0', typeof adjacent[0])
-    console.log(board[adjacent[0]][adjacent[1]])
-    while (board[adjacent[0]][adjacent[1]].channels === 'dead-tile') {
-      console.log('killed a dead-tile blocking source or sink')
-      board[adjacent[0]][adjacent[1]].channels = generateChannel(board[adjacent[0]][adjacent[1]])
+    while ((board[adjacent[0][0]][adjacent[0][1]]).channels === 'dead-tile') {
+      (board[adjacent[0][0]][adjacent[0][1]]).channels = generateChannel(board[adjacent[0][0]][adjacent[0][1]])
     }
   }
   return board
@@ -234,7 +229,6 @@ let selectTile = function(event) {
   $current = board[event.target.id[4]][event.target.id[13]]
   $current.isSelected = !$current.isSelected
   selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
-  console.log($current)
   if ($current.isSelected === false) {
     $current = 0
     selectedTiles = []
@@ -257,7 +251,7 @@ let board = generateBoard(tiles)
 let goalCandidates = getGoalCandidates(board)
 
 let goalCoordinates = defineGoals(goalCandidates)
-board = checkGoalBlockage(goalCoordinates)
+board = checkGoalObstruction(goalCoordinates)
 
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')

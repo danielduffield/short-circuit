@@ -327,16 +327,28 @@ function moveChargeOneTile(chargeCoordinates) {
   let currentlyChargedTile = board[chargeCoordinates[0]][chargeCoordinates[1]]
   let adjacent = findAdjacentTiles(chargeCoordinates)
   for (let i = 0; i < adjacent.length; i++) {
-    let adjacentTile = board[adjacent[i][0]][adjacent[i][1]]
-    if (adjacentTile.chargeStatus.chargeAligned === true) {
-      currentlyChargedTile.chargeStatus.charged = false
-      currentlyChargedTile.chargeStatus.spent = true
-      adjacentTile.chargeStatus.chargeAligned = false
-      adjacentTile.chargeStatus.charged = true
-      currentChargeCoordinates = adjacent[i]
+    console.log(adjacent[i])
+    if (adjacent[i]) {
+      let adjacentTile = board[adjacent[i][0]][adjacent[i][1]]
+      if (adjacentTile.chargeStatus.chargeAligned === true) {
+        console.log('heres the next tile to be charged', adjacentTile)
+        currentlyChargedTile.chargeStatus.charged = false
+        currentlyChargedTile.chargeStatus.spent = true
+        adjacentTile.chargeStatus.chargeAligned = false
+        adjacentTile.chargeStatus.charged = true
+        currentChargeCoordinates = adjacent[i]
+      }
     }
   }
   return currentChargeCoordinates
+}
+
+let pushCharge = function(event) {
+  let $puzzleStart = document.querySelector('.start-point')
+  let chargeCoordinates = [parseInt($puzzleStart.id[4], 10), parseInt($puzzleStart.id[13], 10)]
+  findChargePath(chargeCoordinates)
+  let currentChargeCoordinates = moveChargeOneTile(chargeCoordinates)
+  chargeCoordinates = currentChargeCoordinates
 }
 
 let startGame = function(event) {
@@ -351,6 +363,8 @@ let startGame = function(event) {
 }
 
 let selectTile = function(event) {
+  console.log(event.target)
+  console.log(board[event.target.id[4]][event.target.id[13]])
   if (isInvalidTile(event)) {
     return
   }
@@ -385,9 +399,11 @@ board = checkGoalObstruction(goalCoordinates)
 
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')
+let $chargeButton = document.getElementById('charge-button-slot')
 let $container = document.getElementById('container')
 
 let selectedTiles = []
 
 $start.addEventListener('click', startGame)
+$chargeButton.addEventListener('click', pushCharge)
 $board.addEventListener('click', selectTile)

@@ -180,6 +180,9 @@ function renderRow(tiles, rowNum) {
     $tile.setAttribute('id', 'row-' + rowNum + ' column-' + i)
     if (!isHidden(tiles[i])) {
       let $tileImage = renderTileImage(tiles[i], $tile)
+      if (tiles[i].isSelected === true) {
+        $tileImage.classList.add('selected')
+      }
       if (tiles[i].channels === 'dead-tile') {
         $tileImage.classList.add('dead-tile')
         $tile.classList.add('dead-tile')
@@ -225,12 +228,12 @@ let selectTile = function(event) {
   if (isInvalidTile(event)) {
     return
   }
-  let $current = {}
-  $current = board[event.target.id[4]][event.target.id[13]]
-  $current.isSelected = !$current.isSelected
+  let current = {}
+  current = board[event.target.id[4]][event.target.id[13]]
+  current.isSelected = !current.isSelected
   selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
-  if ($current.isSelected === false) {
-    $current = 0
+  if (current.isSelected === false) {
+    current = 0
     selectedTiles = []
   }
   if (selectedTiles.length > 1) {

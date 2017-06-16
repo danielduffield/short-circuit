@@ -328,6 +328,11 @@ function findChargePath(chargeCoordinates) {
 }
 
 let startGame = function(event) {
+  let $chargeButton = document.createElement('button')
+  $chargeButton.textContent = 'PUSH CHARGE'
+  $chargeButton.setAttribute('id', 'charge-button')
+  $chargeButton.setAttribute('class', 'game-button')
+  document.getElementById('charge-button-slot').appendChild($chargeButton)
   document.getElementById('game-board').appendChild($board)
   removeEventListener('click', startGame)
   $container.removeChild($start)

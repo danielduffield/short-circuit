@@ -306,14 +306,14 @@ function findChargePath(chargeCoordinates) {
     console.log('loop begins')
     let adjacent = findAdjacentTiles(inChargePath)
     let validChannels = getValidChannels(inChargePath)
+    console.log('last charged tile about to be rewritten ', lastChargedTile)
+    lastChargedTile = inChargePath
+    console.log('new last charged ', lastChargedTile)
     for (let i = 0; i < validChannels.length; i++) {
-      lastChargedTile = inChargePath
       let channelOpposite = getOppositeDirection(validChannels[i])
       if (adjacent[validChannels[i]]) {   // if a tile exists in the direction of a valid channel
         let adjacentTile = board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]] // adjacentTile is assigned the value of tile
-        console.log(adjacentTile.channels.channelOpposite)
-        if (isValidChargePath(adjacentTile) && adjacentTile.channels.channelOpposite === true) { // if adjacentTile is valid/has channel connect
-          console.log('conditions satisfied for charge alignment')
+        if (isValidChargePath(adjacentTile) && adjacentTile.channels[channelOpposite] === true) { // if adjacentTile is valid/has channel connect
           adjacentTile.chargeStatus.chargeAligned = true // change that tile to be charge aligned
           inChargePath = adjacent[validChannels[i]] // set that tile as the new charge pathfinding start point and re-loop
           console.log('charge path updated to ', inChargePath)
@@ -324,6 +324,7 @@ function findChargePath(chargeCoordinates) {
       inChargePath = null
     }
   }
+  console.log('done')
 }
 
 let startGame = function(event) {

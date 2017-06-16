@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -94,7 +92,10 @@ function defineGoals(candidates) {
   }
   start.goal = 'start-point'
   end.goal = 'end-point'
-  return board
+  let goalCoordinates = []
+  goalCoordinates.push([start.originRow, start.originCol])
+  goalCoordinates.push([end.originRow, end.originCol])
+  return goalCoordinates
 }
 
 function findAdjacentTiles(coords) {
@@ -103,12 +104,11 @@ function findAdjacentTiles(coords) {
   let y = coords[0]
   let x = coords[1]
   adjacentCandidates = [
-    [x + 1, y],
-    [x - 1, y],
-    [x, y + 1],
-    [x, y - 1]
+    (x + 1, y),
+    (x - 1, y),
+    (x, y + 1),
+    (x, y - 1)
   ]
-  console.log('adjacentCandidates', adjacentCandidates)
   for (let i = 0; i < adjacentCandidates.length; i++) {
     let currentCoords = adjacentCandidates[i]
     if (!(currentCoords[0] < 1 || currentCoords[0] > 6 || currentCoords[1] < 1 || currentCoords[1] > 6)) {
@@ -118,17 +118,20 @@ function findAdjacentTiles(coords) {
   return adjacentTiles
 }
 
-/*
-function checkGoalBlockage(goals) {
-  let startCoords = []
-  let endCoords = []
-  startCoords.push(goals[0].originRow)
-  startCoords.push(goals[0].originCol)
-  endCoords.push(goals[1].originRow)
-  endCoords.push(goals[1].originCol)
+function checkGoalBlockage(goalCoordinates) {
+  console.log(goalCoordinates)
+  for (let i = 0; i < 2; i++) {
+    let adjacent = findAdjacentTiles(goalCoordinates[i])
+    console.log('adjacent 0, 1', adjacent[0], adjacent[1])
+    console.log('adjacent 0', typeof adjacent[0])
+    console.log(board[adjacent[0]][adjacent[1]])
+    while (board[adjacent[0]][adjacent[1]].channels === 'dead-tile') {
+      console.log('killed a dead-tile blocking source or sink')
+      board[adjacent[0]][adjacent[1]].channels = generateChannel(board[adjacent[0]][adjacent[1]])
+    }
+  }
+  return board
 }
-
-*/
 
 function distanceCheck(start, end) {
   let distance = Math.hypot((start.originCol - end.originCol), (start.originRow - end.originRow))
@@ -253,7 +256,8 @@ let board = generateBoard(tiles)
 
 let goalCandidates = getGoalCandidates(board)
 
-board = defineGoals(goalCandidates)
+let goalCoordinates = defineGoals(goalCandidates)
+board = checkGoalBlockage(goalCoordinates)
 
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')

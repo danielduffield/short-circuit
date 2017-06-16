@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -248,6 +250,14 @@ function swapTiles(coordinates) {
 
 function isInvalidTile(event) {
   return (event.target.classList[1] === 'dead-tile') || (event.target.classList[1] === 'hidden-tile') || (!(event.target.classList[0] === 'board-tile') && !(event.target.classList[0] === 'channel-render'))
+}
+
+function getValidChannels(coordinates) {
+  let keys = Object.keys(board[coordinates[0]][coordinates[1]].channels)
+  keys = keys.filter(function (key) {
+    return board[coordinates[0]][coordinates[1]].channels[key] === true
+  })
+  return keys
 }
 
 let startGame = function(event) {

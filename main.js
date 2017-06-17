@@ -115,6 +115,18 @@ function defineGoals(candidates) {
     end = shuffledCandidates.pop()
     distance = distanceCheck(start, end)
   }
+  start.channels = {
+    north: true,
+    south: true,
+    east: true,
+    west: true
+  }
+  end.channels = {
+    north: true,
+    south: true,
+    east: true,
+    west: true
+  }
   start.goal = 'start-point'
   end.goal = 'end-point'
   let goalCoordinates = []

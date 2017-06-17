@@ -111,8 +111,10 @@ function shuffleArray(array) {
 function defineGoals(candidates) {
   let shuffledCandidates = shuffleArray(candidates)
   let start = shuffledCandidates.pop()
+  let startCoordinates = [start.originRow, start.originCol]
   let end = shuffledCandidates.pop()
-  let distance = distanceCheck(start, end)
+  let endCoordinates = [end.originRow, end.originCol]
+  let distance = distanceCheck(startCoordinates, endCoordinates)
   while (distance < 4) {
     end = shuffledCandidates.pop()
     distance = distanceCheck(start, end)
@@ -177,8 +179,8 @@ function checkGoalObstruction(goalCoordinates) {
   return board
 }
 
-function distanceCheck(start, end) {
-  let distance = Math.hypot((start.originCol - end.originCol), (start.originRow - end.originRow))
+function distanceCheck(pointA, pointB) {
+  let distance = Math.hypot((pointA[1] - pointB[1]), (pointA[0] - pointB[0]))
   return distance
 }
 
@@ -362,6 +364,17 @@ function findChargePath(chargeCoordinates) {
   }
 }
 
+function winCheck(chargeCoordinates) {
+  let validChannels = getValidChannels(chargeCoordinates)
+  let chargedTile = board[chargeCoordinates[0]][chargeCoordinates[1]]
+  let endPoint = board[goalCoordinates[1][0]][goalCoordinates[1][1]]
+  console.log('charge coords ', chargeCoordinates)
+  console.log('distance check', distanceCheck(chargeCoordinates, goalCoordinates[1]))
+  if (distanceCheck(chargeCoordinates, goalCoordinates[1]) === 1) {
+    console.log('end is nigh')
+  }
+}
+
 function moveChargeOneTile(chargeCoordinates) {
   let currentChargeCoordinates = chargeCoordinates
   let currentlyChargedTile = board[chargeCoordinates[0]][chargeCoordinates[1]]
@@ -398,6 +411,7 @@ function updateBoardRender(board) {
 let pushCharge = function(event) {
   console.log('charge coords ', chargeCoordinates)
   chargeCoordinates = moveChargeOneTile(chargeCoordinates)
+  winCheck(chargeCoordinates)
   board = updateBoardRender(board)
 }
 

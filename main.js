@@ -115,7 +115,7 @@ function defineGoals(candidates) {
   let distance = distanceCheck(startCoordinates, endCoordinates)
   while (distance < 4) {
     end = shuffledCandidates.pop()
-    distance = distanceCheck(start, end)
+    distance = distanceCheck(startCoordinates, endCoordinates)
   }
   start.channels = {
     north: true,

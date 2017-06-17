@@ -61,6 +61,10 @@ h1 {
   background-color: gold;
 }
 
+.channel-render.charge-aligned {
+  background-color: orange;
+}
+
 .selected {
   background-color: gold;
 }

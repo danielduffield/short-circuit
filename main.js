@@ -244,6 +244,10 @@ function renderRow(tiles, rowNum) {
         $tile.classList.add('charged')
         $tileImage.classList.add('charged')
       }
+      if (tiles[i].chargeStatus.spent === true) {
+        $tileImage.classList.add('spent')
+        $tile.classList.add('spent')
+      }
       $tile.appendChild($tileImage)
     }
     else {
@@ -281,7 +285,7 @@ function hasClass(element, clsName) {
 }
 
 function isInvalidTile(event) {
-  return ((hasClass(event.target, 'dead-tile')) || (hasClass(event.target, 'hidden-tile')) || (hasClass(event.target, 'charged'))) && ((!(hasClass(event.target, 'board-tile'))) || (!(hasClass(event.target, 'channel-render'))))
+  return ((hasClass(event.target, 'dead-tile')) || (hasClass(event.target, 'hidden-tile')) || (hasClass(event.target, 'charged')) || (hasClass(event.target, 'spent'))) && ((!(hasClass(event.target, 'board-tile'))) || (!(hasClass(event.target, 'channel-render'))))
 }
 
 function getValidChannels(coordinates) {
@@ -343,10 +347,8 @@ function findChargePath(chargeCoordinates) {
     let validChannels = getValidChannels(inChargePath)
     lastChargedTile = inChargePath
     for (let i = 0; i < validChannels.length; i++) {
-      console.log('adjacent i ', adjacent[i])
       let channelOpposite = getOppositeDirection(validChannels[i])
       if (adjacent[validChannels[i]]) {   // if a tile exists in the direction of a valid channel
-        console.log('adjacent channel valid channels i', adjacent[validChannels[i]])
         let adjacentTile = board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]] // adjacentTile is assigned the value of tile
         if (isValidChargePath(adjacentTile) && adjacentTile.channels[channelOpposite] === true) { // if adjacentTile is valid/has channel connect
           adjacentTile.chargeStatus.chargeAligned = true // change that tile to be charge aligned
@@ -364,15 +366,17 @@ function moveChargeOneTile(chargeCoordinates) {
   let currentChargeCoordinates = chargeCoordinates
   let currentlyChargedTile = board[chargeCoordinates[0]][chargeCoordinates[1]]
   let adjacent = findAdjacentTiles(chargeCoordinates)
+  let validChannels = getValidChannels(chargeCoordinates)
   for (let i = 0; i < adjacent.length; i++) {
-    if (adjacent[i]) {
-      let adjacentTile = board[adjacent[i][0]][adjacent[i][1]]
-      if (adjacentTile.chargeStatus.chargeAligned === true) {
+    if (adjacent[validChannels[i]]) {
+      let adjacentTile = board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]]
+      if (adjacentTile.chargeStatus.chargeAligned === true && adjacentTile.chargeStatus.spent === false) {
+        console.log(adjacentTile.chargeStatus.spent)
         currentlyChargedTile.chargeStatus.charged = false
         currentlyChargedTile.chargeStatus.spent = true
         adjacentTile.chargeStatus.chargeAligned = false
         adjacentTile.chargeStatus.charged = true
-        currentChargeCoordinates = adjacent[i]
+        currentChargeCoordinates = adjacent[validChannels[i]]
       }
     }
   }

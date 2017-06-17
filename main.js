@@ -115,6 +115,7 @@ function defineGoals(candidates) {
   let distance = distanceCheck(startCoordinates, endCoordinates)
   while (distance < 4) {
     end = shuffledCandidates.pop()
+    endCoordinates = [end.originRow, end.originCol]
     distance = distanceCheck(startCoordinates, endCoordinates)
   }
   start.channels = {
@@ -420,8 +421,6 @@ let startGame = function(event) {
 }
 
 let selectTile = function(event) {
-  console.log(event.target)
-  console.log(board[event.target.id[4]][event.target.id[13]])
   if (isInvalidTile(event)) {
     return
   }
@@ -429,7 +428,6 @@ let selectTile = function(event) {
   current = board[event.target.id[4]][event.target.id[13]]
   current.isSelected = !current.isSelected
   selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
-  console.log(current)
   if (current.isSelected === false) {
     current = 0
     selectedTiles = []
@@ -445,8 +443,8 @@ let tiles = generateTiles()
 let board = generateBoard(tiles)
 
 let goalCandidates = getGoalCandidates(board)
-
 let goalCoordinates = defineGoals(goalCandidates)
+
 board = checkGoalObstruction(goalCoordinates)
 
 findChargePath(goalCoordinates[0])

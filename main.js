@@ -23,10 +23,12 @@ function generateTiles() {
           spent: false
         }
       }
+      tile.channels = generateChannel(tile)
       if (isHidden(tile)) {
         tile.isHidden = true
+        tile.channels = null
       }
-      tile.channels = generateChannel(tile)
+
       tiles.push(tile)
     }
   }
@@ -238,7 +240,16 @@ function renderRow(tiles, rowNum) {
         $tileImage.classList.add('dead-tile')
         $tile.classList.add('dead-tile')
       }
+      if (tiles[i].chargeStatus.charged === true) {
+        $tile.classList.add('charged')
+        $tileImage.classList.add('charged')
+      }
       $tile.appendChild($tileImage)
+    }
+    else {
+      if (tiles[i].chargeStatus.charged === true) {
+        $tile.classList.add('charged')
+      }
     }
     $row.appendChild($tile)
   }
@@ -265,8 +276,12 @@ function swapTiles(coordinates) {
   return board
 }
 
+function hasClass(element, clsName) {
+  return (' ' + element.className + ' ').indexOf(' ' + clsName + ' ') > -1
+}
+
 function isInvalidTile(event) {
-  return (event.target.classList[1] === 'dead-tile') || (event.target.classList[1] === 'hidden-tile') || (!(event.target.classList[0] === 'board-tile') && !(event.target.classList[0] === 'channel-render'))
+  return ((hasClass(event.target, 'dead-tile')) || (hasClass(event.target, 'hidden-tile')) || (hasClass(event.target, 'charged'))) && ((!(hasClass(event.target, 'board-tile'))) || (!(hasClass(event.target, 'channel-render'))))
 }
 
 function getValidChannels(coordinates) {
@@ -293,7 +308,7 @@ function getValidChannels(coordinates) {
 }
 
 function isValidChargePath(tile) {
-  return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false && tile.chargeStatus.charged === false
+  return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false && tile.chargeStatus.charged === false && tile.isHidden === false
 }
 
 function getOppositeDirection(validChannel) {
@@ -328,8 +343,10 @@ function findChargePath(chargeCoordinates) {
     let validChannels = getValidChannels(inChargePath)
     lastChargedTile = inChargePath
     for (let i = 0; i < validChannels.length; i++) {
+      console.log('adjacent i ', adjacent[i])
       let channelOpposite = getOppositeDirection(validChannels[i])
       if (adjacent[validChannels[i]]) {   // if a tile exists in the direction of a valid channel
+        console.log('adjacent channel valid channels i', adjacent[validChannels[i]])
         let adjacentTile = board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]] // adjacentTile is assigned the value of tile
         if (isValidChargePath(adjacentTile) && adjacentTile.channels[channelOpposite] === true) { // if adjacentTile is valid/has channel connect
           adjacentTile.chargeStatus.chargeAligned = true // change that tile to be charge aligned
@@ -359,15 +376,25 @@ function moveChargeOneTile(chargeCoordinates) {
       }
     }
   }
+  console.log('new charge location ', currentChargeCoordinates)
   return currentChargeCoordinates
 }
 
-let pushCharge = function(event) {
-  let $puzzleStart = document.querySelector('.start-point')
-  let chargeCoordinates = [parseInt($puzzleStart.id[4], 10), parseInt($puzzleStart.id[13], 10)]
+function updateBoardRender(board) {
   findChargePath(chargeCoordinates)
-  let currentChargeCoordinates = moveChargeOneTile(chargeCoordinates)
-  chargeCoordinates = currentChargeCoordinates
+  let $board = document.getElementById('board-render')
+  $board.removeEventListener('click', selectTile)
+  document.getElementById('game-board').removeChild($board)
+  $board = renderBoard(board)
+  document.getElementById('game-board').appendChild($board)
+  $board.addEventListener('click', selectTile)
+  return board
+}
+
+let pushCharge = function(event) {
+  console.log('charge coords ', chargeCoordinates)
+  chargeCoordinates = moveChargeOneTile(chargeCoordinates)
+  board = updateBoardRender(board)
 }
 
 let startGame = function(event) {
@@ -400,13 +427,7 @@ let selectTile = function(event) {
     board = swapTiles(selectedTiles)
     selectedTiles = []
   }
-  let $board = document.getElementById('board-render')
-  $board.removeEventListener('click', selectTile)
-  document.getElementById('game-board').removeChild($board)
-  findChargePath(goalCoordinates[0])
-  $board = renderBoard(board)
-  document.getElementById('game-board').appendChild($board)
-  $board.addEventListener('click', selectTile)
+  board = updateBoardRender(board)
 }
 
 let tiles = generateTiles()
@@ -423,6 +444,7 @@ let $board = renderBoard(board)
 let $start = document.getElementById('start-button')
 let $chargeButton = document.getElementById('charge-button-slot')
 let $container = document.getElementById('container')
+let chargeCoordinates = goalCoordinates[0]
 
 let selectedTiles = []
 

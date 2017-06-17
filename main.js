@@ -154,6 +154,9 @@ function findAdjacentTiles(coords) {
     if (!(currentCoords[0] < 1 || currentCoords[0] > 6 || currentCoords[1] < 1 || currentCoords[1] > 6)) {
       adjacentTiles.push(currentCoords)
     }
+    else if ((currentCoords[0] === 0 || currentCoords[0] === 7 || currentCoords[1] === 0 || currentCoords === 7) && board[currentCoords[0]][currentCoords[1]].goal === 'end-point') {
+      adjacentTiles.push(currentCoords)
+    }
     else {
       adjacentTiles.push(null)
     }
@@ -312,7 +315,7 @@ function getValidChannels(coordinates) {
 }
 
 function isValidChargePath(tile) {
-  return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false && tile.chargeStatus.charged === false && tile.isHidden === false
+  return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false && tile.chargeStatus.charged === false && (tile.isHidden === false || tile.goal === 'end-point')
 }
 
 function getOppositeDirection(validChannel) {
@@ -417,6 +420,8 @@ let startGame = function(event) {
 }
 
 let selectTile = function(event) {
+  console.log(event.target)
+  console.log(board[event.target.id[4]][event.target.id[13]])
   if (isInvalidTile(event)) {
     return
   }

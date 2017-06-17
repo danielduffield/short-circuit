@@ -127,6 +127,7 @@ function defineGoals(candidates) {
     east: true,
     west: true
   }
+  start.chargeStatus.charged = true
   start.goal = 'start-point'
   end.goal = 'end-point'
   let goalCoordinates = []
@@ -311,7 +312,6 @@ function getOppositeDirection(validChannel) {
 }
 
 function findChargePath(chargeCoordinates) {
-  board[chargeCoordinates[0]][chargeCoordinates[1]].chargeStatus.charged = true
   let inChargePath = chargeCoordinates
   let lastChargedTile = 0
   while (inChargePath) {
@@ -396,6 +396,7 @@ let selectTile = function(event) {
   let $board = document.getElementById('board-render')
   $board.removeEventListener('click', selectTile)
   document.getElementById('game-board').removeChild($board)
+  findChargePath(goalCoordinates[0])
   $board = renderBoard(board)
   document.getElementById('game-board').appendChild($board)
   $board.addEventListener('click', selectTile)
@@ -408,6 +409,8 @@ let goalCandidates = getGoalCandidates(board)
 
 let goalCoordinates = defineGoals(goalCandidates)
 board = checkGoalObstruction(goalCoordinates)
+
+findChargePath(goalCoordinates[0])
 
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')

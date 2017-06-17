@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -365,11 +363,6 @@ function findChargePath(chargeCoordinates) {
 }
 
 function winCheck(chargeCoordinates) {
-  let validChannels = getValidChannels(chargeCoordinates)
-  let chargedTile = board[chargeCoordinates[0]][chargeCoordinates[1]]
-  let endPoint = board[goalCoordinates[1][0]][goalCoordinates[1][1]]
-  console.log('charge coords ', chargeCoordinates)
-  console.log('distance check', distanceCheck(chargeCoordinates, goalCoordinates[1]))
   if (distanceCheck(chargeCoordinates, goalCoordinates[1]) === 1) {
     console.log('end is nigh')
   }
@@ -384,7 +377,6 @@ function moveChargeOneTile(chargeCoordinates) {
     if (adjacent[validChannels[i]]) {
       let adjacentTile = board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]]
       if (adjacentTile.chargeStatus.chargeAligned === true && adjacentTile.chargeStatus.spent === false) {
-        console.log(adjacentTile.chargeStatus.spent)
         currentlyChargedTile.chargeStatus.charged = false
         currentlyChargedTile.chargeStatus.spent = true
         adjacentTile.chargeStatus.chargeAligned = false
@@ -393,7 +385,6 @@ function moveChargeOneTile(chargeCoordinates) {
       }
     }
   }
-  console.log('new charge location ', currentChargeCoordinates)
   return currentChargeCoordinates
 }
 
@@ -409,7 +400,6 @@ function updateBoardRender(board) {
 }
 
 let pushCharge = function(event) {
-  console.log('charge coords ', chargeCoordinates)
   chargeCoordinates = moveChargeOneTile(chargeCoordinates)
   winCheck(chargeCoordinates)
   board = updateBoardRender(board)
@@ -427,8 +417,6 @@ let startGame = function(event) {
 }
 
 let selectTile = function(event) {
-  console.log(event.target)
-  console.log(board[event.target.id[4]][event.target.id[13]])
   if (isInvalidTile(event)) {
     return
   }

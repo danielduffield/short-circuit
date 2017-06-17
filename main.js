@@ -230,6 +230,10 @@ function renderRow(tiles, rowNum) {
       if (tiles[i].isSelected === true) {
         $tileImage.classList.add('selected')
       }
+      if (tiles[i].chargeStatus.chargeAligned === true) {
+        $tile.classList.add('charge-aligned')
+        $tileImage.classList.add('charge-aligned')
+      }
       if (tiles[i].image === 'dead-tile') {
         $tileImage.classList.add('dead-tile')
         $tile.classList.add('dead-tile')
@@ -312,6 +316,11 @@ function getOppositeDirection(validChannel) {
 }
 
 function findChargePath(chargeCoordinates) {
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      board[i][j].chargeStatus.chargeAligned = false
+    }
+  }
   let inChargePath = chargeCoordinates
   let lastChargedTile = 0
   while (inChargePath) {
@@ -339,11 +348,9 @@ function moveChargeOneTile(chargeCoordinates) {
   let currentlyChargedTile = board[chargeCoordinates[0]][chargeCoordinates[1]]
   let adjacent = findAdjacentTiles(chargeCoordinates)
   for (let i = 0; i < adjacent.length; i++) {
-    console.log(adjacent[i])
     if (adjacent[i]) {
       let adjacentTile = board[adjacent[i][0]][adjacent[i][1]]
       if (adjacentTile.chargeStatus.chargeAligned === true) {
-        console.log('heres the next tile to be charged', adjacentTile)
         currentlyChargedTile.chargeStatus.charged = false
         currentlyChargedTile.chargeStatus.spent = true
         adjacentTile.chargeStatus.chargeAligned = false

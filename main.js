@@ -155,7 +155,7 @@ function findAdjacentTiles(coords) {
     if (!(currentCoords[0] < 1 || currentCoords[0] > 6 || currentCoords[1] < 1 || currentCoords[1] > 6)) {
       adjacentTiles.push(currentCoords)
     }
-    else if ((currentCoords[0] === 0 || currentCoords[0] === 7 || currentCoords[1] === 0 || currentCoords === 7) && board[currentCoords[0]][currentCoords[1]].goal === 'end-point') {
+    else if ((currentCoords[0] === 0 || currentCoords[0] === 7 || currentCoords[1] === 0 || currentCoords[1] === 7) && board[currentCoords[0]][currentCoords[1]].goal === 'end-point') {
       adjacentTiles.push(currentCoords)
     }
     else {
@@ -388,6 +388,9 @@ function moveChargeOneTile(chargeCoordinates) {
         currentChargeCoordinates = adjacent[validChannels[i]]
       }
     }
+  }
+  if (currentChargeCoordinates === chargeCoordinates) {
+    console.log('boom')
   }
   return currentChargeCoordinates
 }

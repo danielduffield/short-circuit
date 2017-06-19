@@ -199,6 +199,39 @@ function hasBeenCounted(tileCoordinates, countedTiles) {
   return false
 }
 
+function countLiveTiles(startingPoint) {
+  let countedLiveTiles = []
+  let toBeScanned = []
+  let currentlyScanningTiles = []
+  currentlyScanningTiles.push(startingPoint)
+  let cycles = 0
+  do {
+    let popLength = toBeScanned.length
+    for (let k = 0; k < popLength; k++) {
+      currentlyScanningTiles.push(toBeScanned.pop())
+    }
+    for (let z = 0; z < currentlyScanningTiles.length; z++) {
+    }
+    for (let i = 0; i < currentlyScanningTiles.length; i++) {
+      let adjacent = findAdjacentTiles(currentlyScanningTiles[i])
+      for (let j = 0; j < adjacent.length; j++) {
+        if (adjacent[j]) {
+          if (countedLiveTiles) {
+            if (!(hasBeenCounted(adjacent[j], countedLiveTiles) || hasBeenCounted(adjacent[j], toBeScanned) || hasBeenCounted(adjacent[j], currentlyScanningTiles) || board[adjacent[j][0]][adjacent[j][1]].image === 'dead-tile' || board[adjacent[j][0]][adjacent[j][1]].goal === 'end-point')) {
+              toBeScanned.push(adjacent[j])
+            }
+          }
+        }
+      }
+    }
+    popLength = currentlyScanningTiles.length
+    for (let n = 0; n < popLength; n++) {
+      countedLiveTiles.push(currentlyScanningTiles.pop())
+    }
+  } while (toBeScanned.length)
+  return countedLiveTiles.length
+}
+
 function generateBoard(tiles) {
   let row = []
   let board = []

@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -201,11 +199,7 @@ function partitionCheck(board) {
   }
   let liveTiles = countLiveTiles(checkStart)
   let deadTiles = countDeadTiles(board)
-  console.log('liveTiles = ', liveTiles)
-  console.log('deadTiles = ', deadTiles)
   if (liveTiles + deadTiles < 36) {
-    console.log('partition detected')
-    console.log('partition size = ', (36 - (deadTiles + liveTiles)))
     return true
   }
   return false
@@ -239,7 +233,6 @@ function countLiveTiles(startingPoint) {
   let toBeScanned = []
   let currentlyScanningTiles = []
   currentlyScanningTiles.push(startingPoint)
-  let cycles = 0
   do {
     let popLength = toBeScanned.length
     for (let k = 0; k < popLength; k++) {

@@ -188,6 +188,27 @@ function distanceCheck(pointA, pointB) {
   return distance
 }
 
+function partitionCheck(board) {
+  let checkStart = null
+  for (let i = 1; i < board.length; i++) {
+    for (let j = 1; j < board[i].length; j++) {
+      if (!checkStart) {
+        if (board[i][j].image !== 'dead-tile') {
+          checkStart = [i, j]
+        }
+      }
+    }
+  }
+  let liveTiles = countLiveTiles(checkStart)
+  let deadTiles = countDeadTiles(board)
+  console.log('liveTiles = ', liveTiles)
+  console.log('deadTiles = ', deadTiles)
+  if (liveTiles + deadTiles < 36) {
+    console.log('partition detected')
+    console.log('partition size = ', (36 - (deadTiles + liveTiles)))
+  }
+}
+
 function hasBeenCounted(tileCoordinates, countedTiles) {
   for (let i = 0; i < countedTiles.length; i++) {
     if (countedTiles[i] && tileCoordinates) {

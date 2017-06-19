@@ -199,6 +199,18 @@ function hasBeenCounted(tileCoordinates, countedTiles) {
   return false
 }
 
+function countDeadTiles(board) {
+  let deadTiles = 0
+  for (let i = 1; i < board.length - 1; i++) {
+    for (let j = 1; j < board[i].length - 1; j++) {
+      if (board[i][j].image === 'dead-tile') {
+        deadTiles++
+      }
+    }
+  }
+  return deadTiles
+}
+
 function countLiveTiles(startingPoint) {
   let countedLiveTiles = []
   let toBeScanned = []

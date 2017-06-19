@@ -477,10 +477,12 @@ function updateBoardRender(board) {
 }
 
 function startTimer() {
-  let secondsBetweenChargeMoves = 3
+  let $timerText = document.getElementById('timer-text')
+  let $countdown = document.getElementById('countdown')
+  $timerText.textContent = 'Charge Moves In: '
+  let secondsBetweenChargeMoves = 4
   for (let i = 100; i >= 0; i--) {
     setTimeout(function timer() {
-      let $countdown = document.createElement('span')
       $countdown.textContent = ((99 - i) % (secondsBetweenChargeMoves + 1))
       if (i !== 0 && (99 - i) % (secondsBetweenChargeMoves + 1) === 0) {
         pushCharge()
@@ -501,10 +503,12 @@ let startGame = function(event) {
   $chargeButton.textContent = 'PUSH CHARGE'
   $chargeButton.setAttribute('id', 'charge-button')
   $chargeButton.setAttribute('class', 'game-button')
+  let $timerText = document.getElementById('timer-text')
   document.getElementById('charge-button-slot').appendChild($chargeButton)
   document.getElementById('game-board').appendChild($board)
   removeEventListener('click', startGame)
   $container.removeChild($start)
+  $timerText.textContent = 'The timer starts when you select a tile.'
 }
 
 let firstTurn = true

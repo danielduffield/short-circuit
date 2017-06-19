@@ -124,3 +124,7 @@ h1 {
     background-color: green;
   }
 }
+
+.timer-display {
+  font-size: 2em;
+}

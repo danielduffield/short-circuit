@@ -206,7 +206,9 @@ function partitionCheck(board) {
   if (liveTiles + deadTiles < 36) {
     console.log('partition detected')
     console.log('partition size = ', (36 - (deadTiles + liveTiles)))
+    return true
   }
+  return false
 }
 
 function hasBeenCounted(tileCoordinates, countedTiles) {
@@ -523,6 +525,12 @@ let selectTile = function(event) {
 
 let tiles = generateTiles()
 let board = generateBoard(tiles)
+let hasPartition = partitionCheck(board)
+while (hasPartition) {
+  tiles = generateTiles()
+  board = generateBoard(tiles)
+  hasPartition = partitionCheck(board)
+}
 
 let goalCandidates = getGoalCandidates(board)
 let goalCoordinates = defineGoals(goalCandidates)

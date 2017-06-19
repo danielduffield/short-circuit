@@ -238,16 +238,12 @@ function countLiveTiles(startingPoint) {
     for (let k = 0; k < popLength; k++) {
       currentlyScanningTiles.push(toBeScanned.pop())
     }
-    for (let z = 0; z < currentlyScanningTiles.length; z++) {
-    }
     for (let i = 0; i < currentlyScanningTiles.length; i++) {
       let adjacent = findAdjacentTiles(currentlyScanningTiles[i])
       for (let j = 0; j < adjacent.length; j++) {
-        if (adjacent[j]) {
-          if (countedLiveTiles) {
-            if (!(hasBeenCounted(adjacent[j], countedLiveTiles) || hasBeenCounted(adjacent[j], toBeScanned) || hasBeenCounted(adjacent[j], currentlyScanningTiles) || board[adjacent[j][0]][adjacent[j][1]].image === 'dead-tile' || board[adjacent[j][0]][adjacent[j][1]].goal === 'end-point')) {
-              toBeScanned.push(adjacent[j])
-            }
+        if (adjacent[j] && countedLiveTiles) {
+          if (!(hasBeenCounted(adjacent[j], countedLiveTiles) || hasBeenCounted(adjacent[j], toBeScanned) || hasBeenCounted(adjacent[j], currentlyScanningTiles) || board[adjacent[j][0]][adjacent[j][1]].image === 'dead-tile' || board[adjacent[j][0]][adjacent[j][1]].goal === 'end-point')) {
+            toBeScanned.push(adjacent[j])
           }
         }
       }
@@ -519,6 +515,7 @@ let selectTile = function(event) {
 let tiles = generateTiles()
 let board = generateBoard(tiles)
 let hasPartition = partitionCheck(board)
+
 while (hasPartition) {
   tiles = generateTiles()
   board = generateBoard(tiles)

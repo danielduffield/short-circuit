@@ -491,9 +491,23 @@ let startGame = function(event) {
   document.getElementById('game-board').appendChild($board)
   removeEventListener('click', startGame)
   $container.removeChild($start)
-}
 
+}
+let firstTurn = true
 let selectTile = function(event) {
+  while (firstTurn) {
+    let secondsBetweenChargeMoves = 3
+    for (let i = 100; i >= 0; i--) {
+      setTimeout(function timer() {
+        let $countdown = document.createElement('span')
+        $countdown.textContent = ((99 - i) % (secondsBetweenChargeMoves + 1))
+        if (i !== 0 && (99 - i) % (secondsBetweenChargeMoves + 1) === 0) {
+          pushCharge()
+        }
+      }, i * 1000)
+    }
+    firstTurn = false
+  }
   if (isInvalidTile(event)) {
     return
   }
@@ -531,12 +545,12 @@ findChargePath(goalCoordinates[0])
 
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')
-let $chargeButton = document.getElementById('charge-button-slot')
+let $chargeButtonSlot = document.getElementById('charge-button-slot')
 let $container = document.getElementById('container')
 let chargeCoordinates = goalCoordinates[0]
 
 let selectedTiles = []
 
 $start.addEventListener('click', startGame)
-$chargeButton.addEventListener('click', pushCharge)
+$chargeButtonSlot.addEventListener('click', pushCharge)
 $board.addEventListener('click', selectTile)

@@ -7,13 +7,26 @@ function generateTiles() {
         originCol: j,
         isSelected: false,
         isHidden: false,
-        channels: null,
-        goal: null
-      }
-      if (isHidden(tile)) {
-        tile.isHidden = true
+        image: null,
+        channels: {
+          north: false,
+          south: false,
+          east: false,
+          west: false
+        },
+        goal: null,
+        chargeStatus: {
+          charged: false,
+          chargeAligned: false,
+          spent: false
+        }
       }
       tile.channels = generateChannel(tile)
+      if (isHidden(tile)) {
+        tile.isHidden = true
+        tile.channels = null
+      }
+
       tiles.push(tile)
     }
   }
@@ -44,28 +57,40 @@ function generateChannel(tile) {
   let random = Math.floor(Math.random() * 7)
   switch (random) {
     case 0:
-      tile.channels = 'dead-tile'
+      tile.image = 'dead-tile'
       break
     case 1:
-      tile.channels = 'north-south'
+      tile.image = 'north-south'
+      tile.channels.north = true
+      tile.channels.south = true
       break
     case 2:
-      tile.channels = 'east-west'
+      tile.image = 'east-west'
+      tile.channels.east = true
+      tile.channels.west = true
       break
     case 3:
-      tile.channels = 'north-east'
+      tile.image = 'north-east'
+      tile.channels.north = true
+      tile.channels.east = true
       break
     case 4:
-      tile.channels = 'north-west'
+      tile.image = 'north-west'
+      tile.channels.north = true
+      tile.channels.west = true
       break
     case 5:
-      tile.channels = 'south-east'
+      tile.image = 'south-east'
+      tile.channels.south = true
+      tile.channels.east = true
       break
     case 6:
-      tile.channels = 'south-west'
+      tile.image = 'south-west'
+      tile.channels.south = true
+      tile.channels.west = true
       break
     default:
-      tile.channels = 'null'
+      tile.image = 'null'
   }
   return tile.channels
 }
@@ -84,12 +109,28 @@ function shuffleArray(array) {
 function defineGoals(candidates) {
   let shuffledCandidates = shuffleArray(candidates)
   let start = shuffledCandidates.pop()
+  let startCoordinates = [start.originRow, start.originCol]
   let end = shuffledCandidates.pop()
-  let distance = distanceCheck(start, end)
+  let endCoordinates = [end.originRow, end.originCol]
+  let distance = distanceCheck(startCoordinates, endCoordinates)
   while (distance < 4) {
     end = shuffledCandidates.pop()
-    distance = distanceCheck(start, end)
+    endCoordinates = [end.originRow, end.originCol]
+    distance = distanceCheck(startCoordinates, endCoordinates)
   }
+  start.channels = {
+    north: true,
+    south: true,
+    east: true,
+    west: true
+  }
+  end.channels = {
+    north: true,
+    south: true,
+    east: true,
+    west: true
+  }
+  start.chargeStatus.charged = true
   start.goal = 'start-point'
   end.goal = 'end-point'
   let goalCoordinates = []
@@ -104,15 +145,21 @@ function findAdjacentTiles(coords) {
   let x = coords[0]
   let y = coords[1]
   adjacentCandidates = [
-    [x + 1, y],
-    [x - 1, y],
-    [x, y + 1],
-    [x, y - 1]
+    [x - 1, y], // north
+    [x + 1, y], // south
+    [x, y + 1], // east
+    [x, y - 1] // west
   ]
   for (let i = 0; i < adjacentCandidates.length; i++) {
     let currentCoords = adjacentCandidates[i]
     if (!(currentCoords[0] < 1 || currentCoords[0] > 6 || currentCoords[1] < 1 || currentCoords[1] > 6)) {
       adjacentTiles.push(currentCoords)
+    }
+    else if ((currentCoords[0] === 0 || currentCoords[0] === 7 || currentCoords[1] === 0 || currentCoords[1] === 7) && board[currentCoords[0]][currentCoords[1]].goal === 'end-point') {
+      adjacentTiles.push(currentCoords)
+    }
+    else {
+      adjacentTiles.push(null)
     }
   }
   return adjacentTiles
@@ -121,15 +168,21 @@ function findAdjacentTiles(coords) {
 function checkGoalObstruction(goalCoordinates) {
   for (let i = 0; i < 2; i++) {
     let adjacent = findAdjacentTiles(goalCoordinates[i])
-    while ((board[adjacent[0][0]][adjacent[0][1]]).channels === 'dead-tile') {
-      (board[adjacent[0][0]][adjacent[0][1]]).channels = generateChannel(board[adjacent[0][0]][adjacent[0][1]])
+    let keepUnblocked = []
+    for (let j = 0; j < adjacent.length; j++) {
+      if (adjacent[j]) {
+        keepUnblocked = adjacent[j]
+      }
+    }
+    while ((board[keepUnblocked[0]][keepUnblocked[1]]).image === 'dead-tile') {
+      (board[keepUnblocked[0]][keepUnblocked[1]]).channels = generateChannel(board[keepUnblocked[0]][keepUnblocked[1]])
     }
   }
   return board
 }
 
-function distanceCheck(start, end) {
-  let distance = Math.hypot((start.originCol - end.originCol), (start.originRow - end.originRow))
+function distanceCheck(pointA, pointB) {
+  let distance = Math.hypot((pointA[1] - pointB[1]), (pointA[0] - pointB[0]))
   return distance
 }
 
@@ -183,11 +236,28 @@ function renderRow(tiles, rowNum) {
       if (tiles[i].isSelected === true) {
         $tileImage.classList.add('selected')
       }
-      if (tiles[i].channels === 'dead-tile') {
+      if (tiles[i].chargeStatus.chargeAligned === true) {
+        $tile.classList.add('charge-aligned')
+        $tileImage.classList.add('charge-aligned')
+      }
+      if (tiles[i].image === 'dead-tile') {
         $tileImage.classList.add('dead-tile')
         $tile.classList.add('dead-tile')
       }
+      if (tiles[i].chargeStatus.charged === true) {
+        $tile.classList.add('charged')
+        $tileImage.classList.add('charged')
+      }
+      if (tiles[i].chargeStatus.spent === true) {
+        $tileImage.classList.add('spent')
+        $tile.classList.add('spent')
+      }
       $tile.appendChild($tileImage)
+    }
+    else {
+      if (tiles[i].chargeStatus.charged === true) {
+        $tile.classList.add('charged')
+      }
     }
     $row.appendChild($tile)
   }
@@ -196,7 +266,7 @@ function renderRow(tiles, rowNum) {
 
 function renderTileImage(tile, $tile) {
   let $tileImage = new Image(60, 60)
-  $tileImage.src = 'images/channels-rough/' + tile.channels + '.png'
+  $tileImage.src = 'images/channels-rough/' + tile.image + '.png'
   $tileImage.classList.add('channel-render')
   $tileImage.setAttribute('id', 'row-' + $tile.id[4] + ' column-' + $tile.id[13] + ' image')
   return $tileImage
@@ -214,11 +284,140 @@ function swapTiles(coordinates) {
   return board
 }
 
+function hasClass(element, clsName) {
+  return (' ' + element.className + ' ').indexOf(' ' + clsName + ' ') > -1
+}
+
 function isInvalidTile(event) {
-  return (event.target.classList[1] === 'dead-tile') || (event.target.classList[1] === 'hidden-tile') || (!(event.target.classList[0] === 'board-tile') && !(event.target.classList[0] === 'channel-render'))
+  return ((hasClass(event.target, 'dead-tile')) || (hasClass(event.target, 'hidden-tile')) || (hasClass(event.target, 'charged')) || (hasClass(event.target, 'spent'))) && ((!(hasClass(event.target, 'board-tile'))) || (!(hasClass(event.target, 'channel-render'))))
+}
+
+function getValidChannels(coordinates) {
+  let validChannels = Object.keys(board[coordinates[0]][coordinates[1]].channels)
+  validChannels = validChannels.filter(function (key) {
+    return board[coordinates[0]][coordinates[1]].channels[key] === true
+  })
+  for (let i = 0; i < validChannels.length; i++) {
+    switch (validChannels[i]) {
+      case 'north':
+        validChannels[i] = 0
+        break
+      case 'south':
+        validChannels[i] = 1
+        break
+      case 'east':
+        validChannels[i] = 2
+        break
+      case 'west':
+        validChannels[i] = 3
+    }
+  }
+  return validChannels
+}
+
+function isValidChargePath(tile) {
+  return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false && tile.chargeStatus.charged === false && (tile.isHidden === false || tile.goal === 'end-point')
+}
+
+function getOppositeDirection(validChannel) {
+  let channelOpposite = null
+  switch (validChannel) {
+    case 0:
+      channelOpposite = 'south'
+      break
+    case 1:
+      channelOpposite = 'north'
+      break
+    case 2:
+      channelOpposite = 'west'
+      break
+    case 3:
+      channelOpposite = 'east'
+      break
+  }
+  return channelOpposite
+}
+
+function findChargePath(chargeCoordinates) {
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      board[i][j].chargeStatus.chargeAligned = false
+    }
+  }
+  let inChargePath = chargeCoordinates
+  let lastChargedTile = 0
+  while (inChargePath) {
+    let adjacent = findAdjacentTiles(inChargePath)
+    let validChannels = getValidChannels(inChargePath)
+    lastChargedTile = inChargePath
+    for (let i = 0; i < validChannels.length; i++) {
+      let channelOpposite = getOppositeDirection(validChannels[i])
+      if (adjacent[validChannels[i]]) {   // if a tile exists in the direction of a valid channel
+        let adjacentTile = board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]] // adjacentTile is assigned the value of tile
+        if (isValidChargePath(adjacentTile) && adjacentTile.channels[channelOpposite] === true) { // if adjacentTile is valid/has channel connect
+          adjacentTile.chargeStatus.chargeAligned = true // change that tile to be charge aligned
+          inChargePath = adjacent[validChannels[i]] // set that tile as the new charge pathfinding start point and re-loop
+        }
+      }
+    }
+    if (lastChargedTile === inChargePath) {
+      inChargePath = null
+    }
+  }
+}
+
+function winCheck(chargeCoordinates) {
+  if (distanceCheck(chargeCoordinates, goalCoordinates[1]) === 1) {
+    console.log('end is nigh')
+  }
+}
+
+function moveChargeOneTile(chargeCoordinates) {
+  let currentChargeCoordinates = chargeCoordinates
+  let currentlyChargedTile = board[chargeCoordinates[0]][chargeCoordinates[1]]
+  let adjacent = findAdjacentTiles(chargeCoordinates)
+  let validChannels = getValidChannels(chargeCoordinates)
+  for (let i = 0; i < adjacent.length; i++) {
+    if (adjacent[validChannels[i]]) {
+      let adjacentTile = board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]]
+      if (adjacentTile.chargeStatus.chargeAligned === true && adjacentTile.chargeStatus.spent === false) {
+        currentlyChargedTile.chargeStatus.charged = false
+        currentlyChargedTile.chargeStatus.spent = true
+        adjacentTile.chargeStatus.chargeAligned = false
+        adjacentTile.chargeStatus.charged = true
+        currentChargeCoordinates = adjacent[validChannels[i]]
+      }
+    }
+  }
+  if (currentChargeCoordinates === chargeCoordinates) {
+    console.log('boom')
+  }
+  return currentChargeCoordinates
+}
+
+function updateBoardRender(board) {
+  findChargePath(chargeCoordinates)
+  let $board = document.getElementById('board-render')
+  $board.removeEventListener('click', selectTile)
+  document.getElementById('game-board').removeChild($board)
+  $board = renderBoard(board)
+  document.getElementById('game-board').appendChild($board)
+  $board.addEventListener('click', selectTile)
+  return board
+}
+
+let pushCharge = function(event) {
+  chargeCoordinates = moveChargeOneTile(chargeCoordinates)
+  winCheck(chargeCoordinates)
+  board = updateBoardRender(board)
 }
 
 let startGame = function(event) {
+  let $chargeButton = document.createElement('button')
+  $chargeButton.textContent = 'PUSH CHARGE'
+  $chargeButton.setAttribute('id', 'charge-button')
+  $chargeButton.setAttribute('class', 'game-button')
+  document.getElementById('charge-button-slot').appendChild($chargeButton)
   document.getElementById('game-board').appendChild($board)
   removeEventListener('click', startGame)
   $container.removeChild($start)
@@ -240,27 +439,27 @@ let selectTile = function(event) {
     board = swapTiles(selectedTiles)
     selectedTiles = []
   }
-  let $board = document.getElementById('board-render')
-  $board.removeEventListener('click', selectTile)
-  document.getElementById('game-board').removeChild($board)
-  $board = renderBoard(board)
-  document.getElementById('game-board').appendChild($board)
-  $board.addEventListener('click', selectTile)
+  board = updateBoardRender(board)
 }
 
 let tiles = generateTiles()
 let board = generateBoard(tiles)
 
 let goalCandidates = getGoalCandidates(board)
-
 let goalCoordinates = defineGoals(goalCandidates)
+
 board = checkGoalObstruction(goalCoordinates)
+
+findChargePath(goalCoordinates[0])
 
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')
+let $chargeButton = document.getElementById('charge-button-slot')
 let $container = document.getElementById('container')
+let chargeCoordinates = goalCoordinates[0]
 
 let selectedTiles = []
 
 $start.addEventListener('click', startGame)
+$chargeButton.addEventListener('click', pushCharge)
 $board.addEventListener('click', selectTile)

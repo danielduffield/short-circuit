@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -184,6 +186,17 @@ function checkGoalObstruction(goalCoordinates) {
 function distanceCheck(pointA, pointB) {
   let distance = Math.hypot((pointA[1] - pointB[1]), (pointA[0] - pointB[0]))
   return distance
+}
+
+function hasBeenCounted(tileCoordinates, countedTiles) {
+  for (let i = 0; i < countedTiles.length; i++) {
+    if (countedTiles[i] && tileCoordinates) {
+      if (board[tileCoordinates[0]][tileCoordinates[1]] === board[countedTiles[i][0]][countedTiles[i][1]]) {
+        return true
+      }
+    }
+  }
+  return false
 }
 
 function generateBoard(tiles) {

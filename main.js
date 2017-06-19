@@ -476,6 +476,20 @@ function updateBoardRender(board) {
   return board
 }
 
+function startTimer() {
+  let secondsBetweenChargeMoves = 3
+  for (let i = 100; i >= 0; i--) {
+    setTimeout(function timer() {
+      let $countdown = document.createElement('span')
+      $countdown.textContent = ((99 - i) % (secondsBetweenChargeMoves + 1))
+      if (i !== 0 && (99 - i) % (secondsBetweenChargeMoves + 1) === 0) {
+        pushCharge()
+      }
+    }, i * 1000)
+  }
+  firstTurn = false
+}
+
 let pushCharge = function(event) {
   chargeCoordinates = moveChargeOneTile(chargeCoordinates)
   winCheck(chargeCoordinates)
@@ -491,25 +505,15 @@ let startGame = function(event) {
   document.getElementById('game-board').appendChild($board)
   removeEventListener('click', startGame)
   $container.removeChild($start)
-
 }
+
 let firstTurn = true
 let selectTile = function(event) {
-  while (firstTurn) {
-    let secondsBetweenChargeMoves = 3
-    for (let i = 100; i >= 0; i--) {
-      setTimeout(function timer() {
-        let $countdown = document.createElement('span')
-        $countdown.textContent = ((99 - i) % (secondsBetweenChargeMoves + 1))
-        if (i !== 0 && (99 - i) % (secondsBetweenChargeMoves + 1) === 0) {
-          pushCharge()
-        }
-      }, i * 1000)
-    }
-    firstTurn = false
-  }
   if (isInvalidTile(event)) {
     return
+  }
+  if (firstTurn) {
+    startTimer()
   }
   let current = {}
   current = board[event.target.id[4]][event.target.id[13]]

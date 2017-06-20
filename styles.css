@@ -47,6 +47,17 @@ h1 {
   font-size: 0;
 }
 
+#game-board-demo {
+  width: 45%;
+  height: 616px;
+  display: inline-block;
+  border: 1px solid black;
+}
+
+#instructions-and-demo {
+  border: 1px solid red;
+}
+
 .game-button {
   font-size: 2em;
   margin: 10px 0;
@@ -59,11 +70,14 @@ h1 {
 #how-to-play-container {
   text-align: left;
   padding: 10px 10px 0 40px;
-  margin: 50px auto;
-  width: 525px;
+  width: 40%;
   border: 5px solid black;
   font-size: 1.5em;
   line-height: 1em;
+  display: inline-block;
+  position: relative;
+  bottom: 200px;
+  margin: 0 50px 0 0;
 }
 
 ul li {

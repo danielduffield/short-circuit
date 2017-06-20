@@ -438,7 +438,6 @@ function findChargePath(chargeCoordinates) {
 
 function winCheck(endPoint) {
   if (board[endPoint[0]][endPoint[1]].chargeStatus.chargeAligned === true) {
-    console.log('WIN!')
     gameWin = true
   }
 }
@@ -462,7 +461,6 @@ function moveChargeOneTile(chargeCoordinates) {
   }
   if (currentChargeCoordinates === chargeCoordinates) {
     gameLoss = true
-    console.log('boom')
   }
   return currentChargeCoordinates
 }
@@ -480,7 +478,6 @@ function updateBoardRender(board) {
 }
 
 function startTimer() {
-  console.log('Tick.')
   let $timerText = document.getElementById('timer-text')
   let $countdown = document.getElementById('countdown')
   if (board[goalCoordinates[1][0]][goalCoordinates[1][1]].chargeStatus.charged === true) {

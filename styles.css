@@ -48,14 +48,14 @@ h1 {
 }
 
 #game-board-demo {
-  width: 45%;
+  width: 620px;
   height: 616px;
   display: inline-block;
-  border: 1px solid black;
+  font-size: 0;
 }
 
 #instructions-and-demo {
-  border: 1px solid red;
+  height: 618px;
 }
 
 .game-button {
@@ -70,6 +70,7 @@ h1 {
 #how-to-play-container {
   text-align: left;
   padding: 10px 10px 0 40px;
+  min-width: 400px;
   width: 40%;
   border: 5px solid black;
   font-size: 1.5em;

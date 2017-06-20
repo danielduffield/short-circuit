@@ -477,6 +477,15 @@ function updateBoardRender(board) {
   return board
 }
 
+function generateDemoBoard() {
+  let demoTiles = generateTiles()
+  let demoBoard = generateBoard(demoTiles)
+  let demoGoalCandidates = getGoalCandidates(demoBoard)
+  let demoGoalCoordinates = defineGoals(demoGoalCandidates)
+  demoBoard = checkGoalObstruction(demoGoalCoordinates)
+  return demoBoard
+}
+
 function startTimer() {
   let $timerText = document.getElementById('timer-text')
   let $countdown = document.getElementById('countdown')
@@ -576,6 +585,7 @@ board = checkGoalObstruction(goalCoordinates)
 
 findChargePath(goalCoordinates[0])
 
+let gameDemo = true
 let gameLoss = false
 let gameWin = false
 let timerCycles = 0
@@ -586,6 +596,13 @@ let $container = document.getElementById('container')
 let chargeCoordinates = goalCoordinates[0]
 
 let selectedTiles = []
+
+if (gameDemo) {
+  let demoBoard = generateDemoBoard()
+  let $demoBoard = renderBoard(demoBoard)
+  let $demoBoardSlot = document.getElementById('game-board-demo')
+  $demoBoardSlot.appendChild($demoBoard)
+}
 
 $start.addEventListener('click', startGame)
 $chargeButtonSlot.addEventListener('click', pushCharge)

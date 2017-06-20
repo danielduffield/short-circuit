@@ -47,6 +47,17 @@ h1 {
   font-size: 0;
 }
 
+#game-board-demo {
+  width: 620px;
+  height: 616px;
+  display: inline-block;
+  font-size: 0;
+}
+
+#instructions-and-demo {
+  height: 618px;
+}
+
 .game-button {
   font-size: 2em;
   margin: 10px 0;
@@ -54,6 +65,31 @@ h1 {
   border-radius: 10px;
   height: 80px;
   width: 200px;
+}
+
+#how-to-play-container {
+  text-align: left;
+  padding: 10px 10px 0 40px;
+  min-width: 400px;
+  width: 40%;
+  border: 5px solid black;
+  font-size: 1.5em;
+  line-height: 1em;
+  display: inline-block;
+  position: relative;
+  bottom: 200px;
+  margin: 0 50px 0 0;
+}
+
+ul li {
+  list-style-type: square;
+  margin: 20px 0;
+}
+
+#instructions-title {
+  margin: 5px;
+  text-align: center;
+  font-size: 1.75em;
 }
 
 #charge-button {

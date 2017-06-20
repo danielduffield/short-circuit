@@ -525,6 +525,8 @@ let startGame = function(event) {
   document.getElementById('game-board').appendChild($board)
   removeEventListener('click', startGame)
   $container.removeChild($start)
+  let $howToPlay = document.getElementById('how-to-play-container')
+  $container.removeChild($howToPlay)
   $timerText.textContent = 'The timer starts when you select a tile.'
 }
 

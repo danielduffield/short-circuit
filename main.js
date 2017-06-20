@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -566,6 +568,20 @@ let selectTile = function(event) {
     selectedTiles = []
   }
   board = updateBoardRender(board)
+}
+
+function loadShortCircuit() {
+  let game = {
+    board: null,
+    win: false,
+    loss: false,
+    demo: false,
+    timer: 0,
+    chargeCoordinates: null,
+    sourceCoordinates: null,
+    sinkCoordinates: null,
+    selectedTiles: null
+  }
 }
 
 let tiles = generateTiles()

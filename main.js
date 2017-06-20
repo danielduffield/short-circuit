@@ -436,9 +436,10 @@ function findChargePath(chargeCoordinates) {
   }
 }
 
-function winCheck(chargeCoordinates) {
-  if (distanceCheck(chargeCoordinates, goalCoordinates[1]) === 1) {
-    console.log('end is nigh')
+function winCheck(endPoint) {
+  if (board[endPoint[0]][endPoint[1]].chargeStatus.chargeAligned === true) {
+    console.log('WIN!')
+    gameWin = true
   }
 }
 
@@ -467,6 +468,7 @@ function moveChargeOneTile(chargeCoordinates) {
 
 function updateBoardRender(board) {
   findChargePath(chargeCoordinates)
+  winCheck(goalCoordinates[1])
   let $board = document.getElementById('board-render')
   $board.removeEventListener('click', selectTile)
   document.getElementById('game-board').removeChild($board)
@@ -478,23 +480,28 @@ function updateBoardRender(board) {
 
 function startTimer() {
   let $timerText = document.getElementById('timer-text')
-  let $countdown = document.getElementById('countdown')
   $timerText.textContent = 'Charge Moves In: '
-  let secondsBetweenChargeMoves = 4
-  for (let i = 100; i >= 0; i--) {
-    setTimeout(function timer() {
-      $countdown.textContent = ((99 - i) % (secondsBetweenChargeMoves + 1))
-      if (i !== 0 && (99 - i) % (secondsBetweenChargeMoves + 1) === 0) {
-        pushCharge()
-      }
-    }, i * 1000)
+  let $countdown = document.getElementById('countdown')
+  console.log('Tick.')
+  window.setTimeout(startTimer, 500)
+  if (gameWin) {
+    pushCharge()
+  }
+  else {
+    timerCycles++
+    if (timerCycles % 2 === 0) {
+      $countdown.textContent = (5 - Math.floor(timerCycles / 2))
+    }
+    if (timerCycles === 10) {
+      pushCharge()
+      timerCycles = 0
+    }
   }
   firstTurn = false
 }
 
 let pushCharge = function(event) {
   chargeCoordinates = moveChargeOneTile(chargeCoordinates)
-  winCheck(chargeCoordinates)
   board = updateBoardRender(board)
 }
 
@@ -551,6 +558,8 @@ board = checkGoalObstruction(goalCoordinates)
 
 findChargePath(goalCoordinates[0])
 
+let gameWin = false
+let timerCycles = 0
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')
 let $chargeButtonSlot = document.getElementById('charge-button-slot')

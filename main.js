@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -157,7 +155,7 @@ function findAdjacentTiles(coords) {
     if (!(currentCoords[0] < 1 || currentCoords[0] > 6 || currentCoords[1] < 1 || currentCoords[1] > 6)) {
       adjacentTiles.push(currentCoords)
     }
-    else if ((currentCoords[0] === 0 || currentCoords[0] === 7 || currentCoords[1] === 0 || currentCoords[1] === 7) && board[currentCoords[0]][currentCoords[1]].goal === 'end-point') {
+    else if ((currentCoords[0] === 0 || currentCoords[0] === 7 || currentCoords[1] === 0 || currentCoords[1] === 7) && game.board[currentCoords[0]][currentCoords[1]].goal === 'end-point') {
       adjacentTiles.push(currentCoords)
     }
     else {
@@ -176,11 +174,11 @@ function checkGoalObstruction(goalCoordinates) {
         keepUnblocked = adjacent[j]
       }
     }
-    while ((board[keepUnblocked[0]][keepUnblocked[1]]).image === 'dead-tile') {
-      (board[keepUnblocked[0]][keepUnblocked[1]]).channels = generateChannel(board[keepUnblocked[0]][keepUnblocked[1]])
+    while ((game.board[keepUnblocked[0]][keepUnblocked[1]]).image === 'dead-tile') {
+      (game.board[keepUnblocked[0]][keepUnblocked[1]]).channels = generateChannel(game.board[keepUnblocked[0]][keepUnblocked[1]])
     }
   }
-  return board
+  return game.board
 }
 
 function distanceCheck(pointA, pointB) {
@@ -210,7 +208,7 @@ function partitionCheck(board) {
 function hasBeenCounted(tileCoordinates, countedTiles) {
   for (let i = 0; i < countedTiles.length; i++) {
     if (countedTiles[i] && tileCoordinates) {
-      if (board[tileCoordinates[0]][tileCoordinates[1]] === board[countedTiles[i][0]][countedTiles[i][1]]) {
+      if (game.board[tileCoordinates[0]][tileCoordinates[1]] === game.board[countedTiles[i][0]][countedTiles[i][1]]) {
         return true
       }
     }
@@ -244,7 +242,7 @@ function countLiveTiles(startingPoint) {
       let adjacent = findAdjacentTiles(currentlyScanningTiles[i])
       for (let j = 0; j < adjacent.length; j++) {
         if (adjacent[j] && countedLiveTiles) {
-          if (!(hasBeenCounted(adjacent[j], countedLiveTiles) || hasBeenCounted(adjacent[j], toBeScanned) || hasBeenCounted(adjacent[j], currentlyScanningTiles) || board[adjacent[j][0]][adjacent[j][1]].image === 'dead-tile' || board[adjacent[j][0]][adjacent[j][1]].goal === 'end-point')) {
+          if (!(hasBeenCounted(adjacent[j], countedLiveTiles) || hasBeenCounted(adjacent[j], toBeScanned) || hasBeenCounted(adjacent[j], currentlyScanningTiles) || game.board[adjacent[j][0]][adjacent[j][1]].image === 'dead-tile' || game.board[adjacent[j][0]][adjacent[j][1]].goal === 'end-point')) {
             toBeScanned.push(adjacent[j])
           }
         }
@@ -347,13 +345,13 @@ function renderTileImage(tile, $tile) {
 function swapTiles(coordinates) {
   let i = coordinates[0]
   let j = coordinates[1]
-  let firstSelected = board[i[0]][i[1]]
-  let secondSelected = board[j[0]][j[1]]
-  board[i[0]][i[1]] = secondSelected
-  board[j[0]][j[1]] = firstSelected
-  board[i[0]][i[1]].isSelected = false
-  board[j[0]][j[1]].isSelected = false
-  return board
+  let firstSelected = game.board[i[0]][i[1]]
+  let secondSelected = game.board[j[0]][j[1]]
+  game.board[i[0]][i[1]] = secondSelected
+  game.board[j[0]][j[1]] = firstSelected
+  game.board[i[0]][i[1]].isSelected = false
+  game.board[j[0]][j[1]].isSelected = false
+  return game.board
 }
 
 function hasClass(element, clsName) {
@@ -365,9 +363,9 @@ function isInvalidTile(event) {
 }
 
 function getValidChannels(coordinates) {
-  let validChannels = Object.keys(board[coordinates[0]][coordinates[1]].channels)
+  let validChannels = Object.keys(game.board[coordinates[0]][coordinates[1]].channels)
   validChannels = validChannels.filter(function (key) {
-    return board[coordinates[0]][coordinates[1]].channels[key] === true
+    return game.board[coordinates[0]][coordinates[1]].channels[key] === true
   })
   for (let i = 0; i < validChannels.length; i++) {
     switch (validChannels[i]) {
@@ -411,9 +409,9 @@ function getOppositeDirection(validChannel) {
 }
 
 function findChargePath(chargeCoordinates) {
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board[i].length; j++) {
-      board[i][j].chargeStatus.chargeAligned = false
+  for (let i = 0; i < game.board.length; i++) {
+    for (let j = 0; j < game.board[i].length; j++) {
+      game.board[i][j].chargeStatus.chargeAligned = false
     }
   }
   let inChargePath = chargeCoordinates
@@ -425,7 +423,7 @@ function findChargePath(chargeCoordinates) {
     for (let i = 0; i < validChannels.length; i++) {
       let channelOpposite = getOppositeDirection(validChannels[i])
       if (adjacent[validChannels[i]]) {   // if a tile exists in the direction of a valid channel
-        let adjacentTile = board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]] // adjacentTile is assigned the value of tile
+        let adjacentTile = game.board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]] // adjacentTile is assigned the value of tile
         if (isValidChargePath(adjacentTile) && adjacentTile.channels[channelOpposite] === true) { // if adjacentTile is valid/has channel connect
           adjacentTile.chargeStatus.chargeAligned = true // change that tile to be charge aligned
           inChargePath = adjacent[validChannels[i]] // set that tile as the new charge pathfinding start point and re-loop
@@ -439,19 +437,19 @@ function findChargePath(chargeCoordinates) {
 }
 
 function winCheck(endPoint) {
-  if (board[endPoint[0]][endPoint[1]].chargeStatus.chargeAligned === true) {
-    gameWin = true
+  if (game.board[endPoint[0]][endPoint[1]].chargeStatus.chargeAligned === true) {
+    game.win = true
   }
 }
 
 function moveChargeOneTile(chargeCoordinates) {
   let currentChargeCoordinates = chargeCoordinates
-  let currentlyChargedTile = board[chargeCoordinates[0]][chargeCoordinates[1]]
+  let currentlyChargedTile = game.board[chargeCoordinates[0]][chargeCoordinates[1]]
   let adjacent = findAdjacentTiles(chargeCoordinates)
   let validChannels = getValidChannels(chargeCoordinates)
   for (let i = 0; i < adjacent.length; i++) {
     if (adjacent[validChannels[i]]) {
-      let adjacentTile = board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]]
+      let adjacentTile = game.board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]]
       if (adjacentTile.chargeStatus.chargeAligned === true && adjacentTile.chargeStatus.spent === false) {
         currentlyChargedTile.chargeStatus.charged = false
         currentlyChargedTile.chargeStatus.spent = true
@@ -462,14 +460,14 @@ function moveChargeOneTile(chargeCoordinates) {
     }
   }
   if (currentChargeCoordinates === chargeCoordinates) {
-    gameLoss = true
+    game.loss = true
   }
   return currentChargeCoordinates
 }
 
 function updateBoardRender(board) {
-  findChargePath(chargeCoordinates)
-  winCheck(goalCoordinates[1])
+  findChargePath(game.chargeCoordinates)
+  winCheck(game.sourceAndSink[1])
   let $board = document.getElementById('board-render')
   $board.removeEventListener('click', selectTile)
   document.getElementById('game-board').removeChild($board)
@@ -491,17 +489,17 @@ function generateDemoBoard() {
 function startTimer() {
   let $timerText = document.getElementById('timer-text')
   let $countdown = document.getElementById('countdown')
-  if (board[goalCoordinates[1][0]][goalCoordinates[1][1]].chargeStatus.charged === true) {
+  if (game.board[game.sourceAndSink[1][0]][game.sourceAndSink[1][1]].chargeStatus.charged === true) {
     $timerText.textContent = 'Congratulations, you stopped World War III!'
     return
   }
-  if (gameLoss) {
+  if (game.loss) {
     $timerText.textContent = 'You couldn\'t fix the circuit! Missiles have been launched!'
     $countdown.textContent = ''
     return
   }
   window.setTimeout(startTimer, 500)
-  if (gameWin) {
+  if (game.win) {
     $timerText.textContent = 'Well done! You restored the circuit!'
     $countdown.textContent = ''
     pushCharge()
@@ -509,31 +507,33 @@ function startTimer() {
   else {
     $timerText.textContent = 'Charge Moves In: '
 
-    timerCycles++
-    if (timerCycles % 2 === 0) {
-      $countdown.textContent = (5 - Math.floor(timerCycles / 2))
+    game.timer++
+    if (game.timer % 2 === 0) {
+      $countdown.textContent = (5 - Math.floor(game.timer / 2))
     }
-    if (timerCycles === 10) {
+    if (game.timer === 10) {
       pushCharge()
-      timerCycles = 0
+      game.timer = 0
     }
   }
   firstTurn = false
 }
 
 let pushCharge = function(event) {
-  chargeCoordinates = moveChargeOneTile(chargeCoordinates)
-  board = updateBoardRender(board)
+  game.chargeCoordinates = moveChargeOneTile(game.chargeCoordinates)
+  game.board = updateBoardRender(game.board)
 }
 
 let startGame = function(event) {
   let $chargeButton = document.createElement('button')
+  let $container = document.getElementById('container')
+  let $start = document.getElementById('start-button')
   $chargeButton.textContent = 'PUSH CHARGE'
   $chargeButton.setAttribute('id', 'charge-button')
   $chargeButton.setAttribute('class', 'game-button')
   let $timerText = document.getElementById('timer-text')
   document.getElementById('charge-button-slot').appendChild($chargeButton)
-  document.getElementById('game-board').appendChild($board)
+  document.getElementById('game-board').appendChild(game.boardRender)
   removeEventListener('click', startGame)
   $container.removeChild($start)
   let $instructionsAndDemo = document.getElementById('instructions-and-demo')
@@ -549,77 +549,77 @@ let selectTile = function(event) {
   if (firstTurn) {
     startTimer()
   }
-  if (selectedTiles.length) {
-    if (board[selectedTiles[0][0]][selectedTiles[0][1]].chargeStatus.charged) {
-      selectedTiles = []
+  if (game.selectedTiles.length) {
+    if (game.board[game.selectedTiles[0][0]][game.selectedTiles[0][1]].chargeStatus.charged) {
+      game.selectedTiles = []
     }
   }
 
   let current = {}
-  current = board[event.target.id[4]][event.target.id[13]]
+  current = game.board[event.target.id[4]][event.target.id[13]]
   current.isSelected = !current.isSelected
-  selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
+  game.selectedTiles.push([(event.target.id[4]), (event.target.id[13])])
   if (current.isSelected === false) {
     current = 0
-    selectedTiles = []
+    game.selectedTiles = []
   }
-  if (selectedTiles.length > 1) {
-    board = swapTiles(selectedTiles)
-    selectedTiles = []
+  if (game.selectedTiles.length > 1) {
+    game.board = swapTiles(game.selectedTiles)
+    game.selectedTiles = []
   }
-  board = updateBoardRender(board)
+  game.board = updateBoardRender(game.board)
 }
 
 function loadShortCircuit() {
-  let game = {
-    board: null,
-    win: false,
-    loss: false,
-    demo: false,
-    timer: 0,
-    chargeCoordinates: null,
-    sourceCoordinates: null,
-    sinkCoordinates: null,
-    selectedTiles: null
+  let tiles = generateTiles()
+  game.board = generateBoard(tiles)
+  let hasPartition = partitionCheck(game.board)
+
+  while (hasPartition) {
+    tiles = generateTiles()
+    game.board = generateBoard(tiles)
+    hasPartition = partitionCheck(game.board)
   }
+
+  let goalCandidates = getGoalCandidates(game.board)
+  game.sourceAndSink = defineGoals(goalCandidates)
+
+  game.board = checkGoalObstruction(game.sourceAndSink)
+
+  findChargePath(game.sourceAndSink[0])
+
+  game.demo = true
+  game.loss = false
+  game.win = false
+  game.timer = 0
+  game.boardRender = renderBoard(game.board)
+  let $start = document.getElementById('start-button')
+  let $chargeButtonSlot = document.getElementById('charge-button-slot')
+  game.chargeCoordinates = game.sourceAndSink[0]
+
+  game.selectedTiles = []
+
+  if (game.demo) {
+    let demoBoard = generateDemoBoard()
+    let $demoBoard = renderBoard(demoBoard)
+    let $demoBoardSlot = document.getElementById('game-board-demo')
+    $demoBoardSlot.appendChild($demoBoard)
+  }
+
+  $start.addEventListener('click', startGame)
+  $chargeButtonSlot.addEventListener('click', pushCharge)
+  game.boardRender.addEventListener('click', selectTile)
 }
 
-let tiles = generateTiles()
-let board = generateBoard(tiles)
-let hasPartition = partitionCheck(board)
-
-while (hasPartition) {
-  tiles = generateTiles()
-  board = generateBoard(tiles)
-  hasPartition = partitionCheck(board)
+let game = {
+  board: null,
+  win: false,
+  loss: false,
+  demo: false,
+  timer: 0,
+  chargeCoordinates: null,
+  sourceAndSink: null,
+  selectedTiles: null
 }
 
-let goalCandidates = getGoalCandidates(board)
-let goalCoordinates = defineGoals(goalCandidates)
-
-board = checkGoalObstruction(goalCoordinates)
-
-findChargePath(goalCoordinates[0])
-
-let gameDemo = true
-let gameLoss = false
-let gameWin = false
-let timerCycles = 0
-let $board = renderBoard(board)
-let $start = document.getElementById('start-button')
-let $chargeButtonSlot = document.getElementById('charge-button-slot')
-let $container = document.getElementById('container')
-let chargeCoordinates = goalCoordinates[0]
-
-let selectedTiles = []
-
-if (gameDemo) {
-  let demoBoard = generateDemoBoard()
-  let $demoBoard = renderBoard(demoBoard)
-  let $demoBoardSlot = document.getElementById('game-board-demo')
-  $demoBoardSlot.appendChild($demoBoard)
-}
-
-$start.addEventListener('click', startGame)
-$chargeButtonSlot.addEventListener('click', pushCharge)
-$board.addEventListener('click', selectTile)
+loadShortCircuit()

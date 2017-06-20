@@ -6,6 +6,10 @@
   background-color: lightblue;
 }
 
+body {
+  zoom: 90%;
+}
+
 #container {
   text-align: center;
   margin: 0 auto;
@@ -38,7 +42,7 @@ h1 {
 }
 
 #game-board {
-  margin: 30px auto;
+  margin: 20px auto;
   width: 616px;
   font-size: 0;
 }
@@ -50,6 +54,10 @@ h1 {
   border-radius: 10px;
   height: 80px;
   width: 200px;
+}
+
+#charge-button {
+  display: none;
 }
 
 .channel-render {

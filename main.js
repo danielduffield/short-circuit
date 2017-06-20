@@ -539,6 +539,12 @@ let selectTile = function(event) {
   if (firstTurn) {
     startTimer()
   }
+  if (selectedTiles.length) {
+    if (board[selectedTiles[0][0]][selectedTiles[0][1]].chargeStatus.charged) {
+      selectedTiles = []
+    }
+  }
+
   let current = {}
   current = board[event.target.id[4]][event.target.id[13]]
   current.isSelected = !current.isSelected

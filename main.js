@@ -436,9 +436,9 @@ function findChargePath(chargeCoordinates) {
   }
 }
 
-function winCheck(chargeCoordinates) {
-  if (distanceCheck(chargeCoordinates, goalCoordinates[1]) === 1) {
-    console.log('end is nigh')
+function winCheck(endPoint) {
+  if (board[endPoint[0]][endPoint[1]].chargeStatus.chargeAligned === true) {
+    gameWin = true
   }
 }
 
@@ -460,13 +460,14 @@ function moveChargeOneTile(chargeCoordinates) {
     }
   }
   if (currentChargeCoordinates === chargeCoordinates) {
-    console.log('boom')
+    gameLoss = true
   }
   return currentChargeCoordinates
 }
 
 function updateBoardRender(board) {
   findChargePath(chargeCoordinates)
+  winCheck(goalCoordinates[1])
   let $board = document.getElementById('board-render')
   $board.removeEventListener('click', selectTile)
   document.getElementById('game-board').removeChild($board)
@@ -476,9 +477,41 @@ function updateBoardRender(board) {
   return board
 }
 
+function startTimer() {
+  let $timerText = document.getElementById('timer-text')
+  let $countdown = document.getElementById('countdown')
+  if (board[goalCoordinates[1][0]][goalCoordinates[1][1]].chargeStatus.charged === true) {
+    $timerText.textContent = 'Congratulations, you stopped World War III!'
+    return
+  }
+  if (gameLoss) {
+    $timerText.textContent = 'You couldn\'t fix the circuit! Missiles have been launched!'
+    $countdown.textContent = ''
+    return
+  }
+  window.setTimeout(startTimer, 500)
+  if (gameWin) {
+    $timerText.textContent = 'Well done! You restored the circuit!'
+    $countdown.textContent = ''
+    pushCharge()
+  }
+  else {
+    $timerText.textContent = 'Charge Moves In: '
+
+    timerCycles++
+    if (timerCycles % 2 === 0) {
+      $countdown.textContent = (5 - Math.floor(timerCycles / 2))
+    }
+    if (timerCycles === 10) {
+      pushCharge()
+      timerCycles = 0
+    }
+  }
+  firstTurn = false
+}
+
 let pushCharge = function(event) {
   chargeCoordinates = moveChargeOneTile(chargeCoordinates)
-  winCheck(chargeCoordinates)
   board = updateBoardRender(board)
 }
 
@@ -487,16 +520,28 @@ let startGame = function(event) {
   $chargeButton.textContent = 'PUSH CHARGE'
   $chargeButton.setAttribute('id', 'charge-button')
   $chargeButton.setAttribute('class', 'game-button')
+  let $timerText = document.getElementById('timer-text')
   document.getElementById('charge-button-slot').appendChild($chargeButton)
   document.getElementById('game-board').appendChild($board)
   removeEventListener('click', startGame)
   $container.removeChild($start)
+  $timerText.textContent = 'The timer starts when you select a tile.'
 }
 
+let firstTurn = true
 let selectTile = function(event) {
   if (isInvalidTile(event)) {
     return
   }
+  if (firstTurn) {
+    startTimer()
+  }
+  if (selectedTiles.length) {
+    if (board[selectedTiles[0][0]][selectedTiles[0][1]].chargeStatus.charged) {
+      selectedTiles = []
+    }
+  }
+
   let current = {}
   current = board[event.target.id[4]][event.target.id[13]]
   current.isSelected = !current.isSelected
@@ -529,14 +574,17 @@ board = checkGoalObstruction(goalCoordinates)
 
 findChargePath(goalCoordinates[0])
 
+let gameLoss = false
+let gameWin = false
+let timerCycles = 0
 let $board = renderBoard(board)
 let $start = document.getElementById('start-button')
-let $chargeButton = document.getElementById('charge-button-slot')
+let $chargeButtonSlot = document.getElementById('charge-button-slot')
 let $container = document.getElementById('container')
 let chargeCoordinates = goalCoordinates[0]
 
 let selectedTiles = []
 
 $start.addEventListener('click', startGame)
-$chargeButton.addEventListener('click', pushCharge)
+$chargeButtonSlot.addEventListener('click', pushCharge)
 $board.addEventListener('click', selectTile)

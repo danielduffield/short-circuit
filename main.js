@@ -479,15 +479,21 @@ function updateBoardRender(board) {
 }
 
 function startTimer() {
-  let $timerText = document.getElementById('timer-text')
-  $timerText.textContent = 'Charge Moves In: '
-  let $countdown = document.getElementById('countdown')
   console.log('Tick.')
+  let $timerText = document.getElementById('timer-text')
+  let $countdown = document.getElementById('countdown')
+  if (board[goalCoordinates[1][0]][goalCoordinates[1][1]].chargeStatus.charged === true) {
+    return
+  }
   window.setTimeout(startTimer, 500)
   if (gameWin) {
+    $timerText.textContent = 'Well done! You restored the circuit!'
+    $countdown.textContent = ''
     pushCharge()
   }
   else {
+    $timerText.textContent = 'Charge Moves In: '
+
     timerCycles++
     if (timerCycles % 2 === 0) {
       $countdown.textContent = (5 - Math.floor(timerCycles / 2))

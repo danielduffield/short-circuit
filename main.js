@@ -461,6 +461,7 @@ function moveChargeOneTile(chargeCoordinates) {
     }
   }
   if (currentChargeCoordinates === chargeCoordinates) {
+    gameLoss = true
     console.log('boom')
   }
   return currentChargeCoordinates
@@ -483,6 +484,12 @@ function startTimer() {
   let $timerText = document.getElementById('timer-text')
   let $countdown = document.getElementById('countdown')
   if (board[goalCoordinates[1][0]][goalCoordinates[1][1]].chargeStatus.charged === true) {
+    $timerText.textContent = 'Congratulations, you stopped World War III!'
+    return
+  }
+  if (gameLoss) {
+    $timerText.textContent = 'You couldn\'t fix the circuit! Missiles have been launched!'
+    $countdown.textContent = ''
     return
   }
   window.setTimeout(startTimer, 500)
@@ -564,6 +571,7 @@ board = checkGoalObstruction(goalCoordinates)
 
 findChargePath(goalCoordinates[0])
 
+let gameLoss = false
 let gameWin = false
 let timerCycles = 0
 let $board = renderBoard(board)

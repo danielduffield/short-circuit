@@ -467,7 +467,7 @@ function moveChargeOneTile(chargeCoordinates) {
 
 function updateBoardRender(board) {
   findChargePath(game.chargeCoordinates)
-  winCheck(game.sourceAndSink[1])
+  winCheck(game.sink)
   let $board = document.getElementById('board-render')
   $board.removeEventListener('click', selectTile)
   document.getElementById('game-board').removeChild($board)
@@ -489,7 +489,7 @@ function generateDemoBoard() {
 function startTimer() {
   let $timerText = document.getElementById('timer-text')
   let $countdown = document.getElementById('countdown')
-  if (game.board[game.sourceAndSink[1][0]][game.sourceAndSink[1][1]].chargeStatus.charged === true) {
+  if (game.board[game.sink[0]][game.sink[1]].chargeStatus.charged === true) {
     $timerText.textContent = 'Congratulations, you stopped World War III!'
     return
   }
@@ -582,11 +582,13 @@ function loadShortCircuit() {
   }
 
   let goalCandidates = getGoalCandidates(game.board)
-  game.sourceAndSink = defineGoals(goalCandidates)
+  let sourceAndSink = defineGoals(goalCandidates)
+  game.source = sourceAndSink[0]
+  game.sink = sourceAndSink[1]
 
-  game.board = checkGoalObstruction(game.sourceAndSink)
+  game.board = checkGoalObstruction(sourceAndSink)
 
-  findChargePath(game.sourceAndSink[0])
+  findChargePath(game.source)
 
   game.demo = true
   game.loss = false
@@ -595,7 +597,7 @@ function loadShortCircuit() {
   game.boardRender = renderBoard(game.board)
   let $start = document.getElementById('start-button')
   let $chargeButtonSlot = document.getElementById('charge-button-slot')
-  game.chargeCoordinates = game.sourceAndSink[0]
+  game.chargeCoordinates = game.source
 
   game.selectedTiles = []
 
@@ -618,7 +620,8 @@ let game = {
   demo: false,
   timer: 0,
   chargeCoordinates: null,
-  sourceAndSink: null,
+  source: null,
+  sink: null,
   selectedTiles: null
 }
 

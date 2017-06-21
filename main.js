@@ -534,6 +534,7 @@ let startGame = function(event) {
   let $instructionsAndDemo = document.getElementById('instructions-and-demo')
   $container.removeChild($start)
   $container.removeChild($instructionsAndDemo)
+  game.demo = false
   loadShortCircuit()
 }
 
@@ -619,6 +620,7 @@ let game = {
   board: null,
   win: false,
   loss: false,
+  demo: true,
   timer: 0,
   chargeCoordinates: null,
   source: null,
@@ -628,10 +630,20 @@ let game = {
   gamesPlayed: 0
 }
 
-let demoBoard = generateDemoBoard()
-let $demoBoard = renderBoard(demoBoard)
-let $demoBoardSlot = document.getElementById('game-board-demo')
-$demoBoardSlot.appendChild($demoBoard)
+function demoTimer() {
+  if (game.demo === true) {
+    window.setTimeout(demoTimer, 2500)
+    let demoBoard = generateDemoBoard()
+    let $demoBoard = renderBoard(demoBoard)
+    let $demoBoardSlot = document.getElementById('game-board-demo')
+    let $demoBoardRender = document.getElementById('board-render')
+    if ($demoBoardRender) {
+      $demoBoardSlot.removeChild($demoBoardRender)
+    }
+    $demoBoardSlot.appendChild($demoBoard)
+  }
+}
 
+demoTimer()
 let $start = document.getElementById('start-button')
 $start.addEventListener('click', startGame)

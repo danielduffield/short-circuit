@@ -589,6 +589,11 @@ function loadShortCircuit() {
   game.loss = false
   game.win = false
   game.timer = 0
+  if (game.gamesPlayed > 0) {
+    let $oldBoard = document.getElementById('board-render')
+    let $boardSlot = document.getElementById('game-board')
+    $boardSlot.removeChild($oldBoard)
+  }
   game.boardRender = renderBoard(game.board)
   let $chargeButtonSlot = document.getElementById('charge-button-slot')
   game.chargeCoordinates = game.source
@@ -606,26 +611,27 @@ function loadShortCircuit() {
 
   $chargeButtonSlot.addEventListener('click', pushCharge)
   game.boardRender.addEventListener('click', selectTile)
+
+  game.gamesPlayed++
 }
 
 let game = {
   board: null,
   win: false,
   loss: false,
-  demo: true,
   timer: 0,
   chargeCoordinates: null,
   source: null,
   sink: null,
   selectedTiles: null,
-  isFirstTurn: true
+  isFirstTurn: true,
+  gamesPlayed: 0
 }
 
 let demoBoard = generateDemoBoard()
 let $demoBoard = renderBoard(demoBoard)
 let $demoBoardSlot = document.getElementById('game-board-demo')
 $demoBoardSlot.appendChild($demoBoard)
-game.demo = false
 
 let $start = document.getElementById('start-button')
 $start.addEventListener('click', startGame)

@@ -108,34 +108,34 @@ function shuffleArray(array) {
 
 function defineGoals(candidates) {
   let shuffledCandidates = shuffleArray(candidates)
-  let start = shuffledCandidates.pop()
-  let startCoordinates = [start.originRow, start.originCol]
-  let end = shuffledCandidates.pop()
-  let endCoordinates = [end.originRow, end.originCol]
-  let distance = distanceCheck(startCoordinates, endCoordinates)
+  let source = shuffledCandidates.pop()
+  let sourceCoordinates = [source.originRow, source.originCol]
+  let sink = shuffledCandidates.pop()
+  let sinkCoordinates = [sink.originRow, sink.originCol]
+  let distance = distanceCheck(sourceCoordinates, sinkCoordinates)
   while (distance < 4) {
-    end = shuffledCandidates.pop()
-    endCoordinates = [end.originRow, end.originCol]
-    distance = distanceCheck(startCoordinates, endCoordinates)
+    sink = shuffledCandidates.pop()
+    sinkCoordinates = [sink.originRow, sink.originCol]
+    distance = distanceCheck(sourceCoordinates, sinkCoordinates)
   }
-  start.channels = {
+  source.channels = {
     north: true,
     south: true,
     east: true,
     west: true
   }
-  end.channels = {
+  sink.channels = {
     north: true,
     south: true,
     east: true,
     west: true
   }
-  start.chargeStatus.charged = true
-  start.goal = 'start-point'
-  end.goal = 'end-point'
+  source.chargeStatus.charged = true
+  source.goal = 'start-point'
+  sink.goal = 'end-point'
   let goalCoordinates = []
-  goalCoordinates.push([start.originRow, start.originCol])
-  goalCoordinates.push([end.originRow, end.originCol])
+  goalCoordinates.push([source.originRow, source.originCol])
+  goalCoordinates.push([sink.originRow, sink.originCol])
   return goalCoordinates
 }
 

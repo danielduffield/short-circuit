@@ -489,12 +489,21 @@ function generateDemoBoard() {
   return demoBoard
 }
 
+let restartGame = function() {
+  let $container = document.getElementById('container')
+  let $restart = document.getElementById('restart-button')
+  $container.removeChild($restart)
+  loadShortCircuit()
+}
+
 function startTimer() {
   let $timerText = document.getElementById('timer-text')
   let $countdown = document.getElementById('countdown')
   let $restart = document.createElement('button')
   let $container = document.getElementById('container')
   $restart.classList.add('game-button')
+  $restart.setAttribute('id', 'restart-button')
+  $restart.addEventListener('click', restartGame)
   if (game.board[game.sink[0]][game.sink[1]].chargeStatus.charged === true) {
     $timerText.textContent = 'Congratulations, you stopped World War III!'
     $restart.textContent = 'Play again?'

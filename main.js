@@ -492,13 +492,20 @@ function generateDemoBoard() {
 function startTimer() {
   let $timerText = document.getElementById('timer-text')
   let $countdown = document.getElementById('countdown')
+  let $restart = document.createElement('button')
+  let $container = document.getElementById('container')
+  $restart.classList.add('game-button')
   if (game.board[game.sink[0]][game.sink[1]].chargeStatus.charged === true) {
     $timerText.textContent = 'Congratulations, you stopped World War III!'
+    $restart.textContent = 'Play again?'
+    $container.appendChild($restart)
     return
   }
   if (game.loss) {
     $timerText.textContent = 'You couldn\'t fix the circuit! Missiles have been launched!'
     $countdown.textContent = ''
+    $restart.textContent = 'Try again?'
+    $container.appendChild($restart)
     return
   }
   window.setTimeout(startTimer, 500)

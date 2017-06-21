@@ -485,8 +485,7 @@ function generateDemoBoard() {
   let demoTiles = generateTiles()
   let demoBoard = generateBoard(demoTiles)
   let demoGoalCandidates = getGoalCandidates(demoBoard)
-  let demoGoalCoordinates = defineGoals(demoGoalCandidates)
-  demoBoard = checkGoalObstruction(demoGoalCoordinates)
+  defineGoals(demoGoalCandidates)
   return demoBoard
 }
 
@@ -520,7 +519,7 @@ function startTimer() {
       game.timer = 0
     }
   }
-  firstTurn = false
+  game.isFirstTurn = false
 }
 
 let pushCharge = function(event) {
@@ -529,28 +528,20 @@ let pushCharge = function(event) {
 }
 
 let startGame = function(event) {
-  let $chargeButton = document.createElement('button')
   let $container = document.getElementById('container')
   let $start = document.getElementById('start-button')
-  $chargeButton.textContent = 'PUSH CHARGE'
-  $chargeButton.setAttribute('id', 'charge-button')
-  $chargeButton.setAttribute('class', 'game-button')
-  let $timerText = document.getElementById('timer-text')
-  document.getElementById('charge-button-slot').appendChild($chargeButton)
-  document.getElementById('game-board').appendChild(game.boardRender)
   removeEventListener('click', startGame)
-  $container.removeChild($start)
   let $instructionsAndDemo = document.getElementById('instructions-and-demo')
+  $container.removeChild($start)
   $container.removeChild($instructionsAndDemo)
-  $timerText.textContent = 'The timer starts when you select a tile.'
+  loadShortCircuit()
 }
 
-let firstTurn = true
 let selectTile = function(event) {
   if (isInvalidTile(event) || game.win === true || game.loss === true) {
     return
   }
-  if (firstTurn) {
+  if (game.isFirstTurn) {
     startTimer()
   }
   if (game.selectedTiles.length) {
@@ -594,25 +585,25 @@ function loadShortCircuit() {
 
   findChargePath(game.source)
 
-  game.demo = true
+  game.isFirstTurn = true
   game.loss = false
   game.win = false
   game.timer = 0
   game.boardRender = renderBoard(game.board)
-  let $start = document.getElementById('start-button')
   let $chargeButtonSlot = document.getElementById('charge-button-slot')
   game.chargeCoordinates = game.source
 
   game.selectedTiles = []
 
-  if (game.demo) {
-    let demoBoard = generateDemoBoard()
-    let $demoBoard = renderBoard(demoBoard)
-    let $demoBoardSlot = document.getElementById('game-board-demo')
-    $demoBoardSlot.appendChild($demoBoard)
-  }
+  let $chargeButton = document.createElement('button')
+  $chargeButton.textContent = 'PUSH CHARGE'
+  $chargeButton.setAttribute('id', 'charge-button')
+  $chargeButton.setAttribute('class', 'game-button')
+  let $timerText = document.getElementById('timer-text')
+  $timerText.textContent = 'The timer starts when you select a tile.'
+  document.getElementById('charge-button-slot').appendChild($chargeButton)
+  document.getElementById('game-board').appendChild(game.boardRender)
 
-  $start.addEventListener('click', startGame)
   $chargeButtonSlot.addEventListener('click', pushCharge)
   game.boardRender.addEventListener('click', selectTile)
 }
@@ -621,12 +612,20 @@ let game = {
   board: null,
   win: false,
   loss: false,
-  demo: false,
+  demo: true,
   timer: 0,
   chargeCoordinates: null,
   source: null,
   sink: null,
-  selectedTiles: null
+  selectedTiles: null,
+  isFirstTurn: true
 }
 
-loadShortCircuit()
+let demoBoard = generateDemoBoard()
+let $demoBoard = renderBoard(demoBoard)
+let $demoBoardSlot = document.getElementById('game-board-demo')
+$demoBoardSlot.appendChild($demoBoard)
+game.demo = false
+
+let $start = document.getElementById('start-button')
+$start.addEventListener('click', startGame)

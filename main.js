@@ -547,7 +547,7 @@ let startGame = function(event) {
 
 let firstTurn = true
 let selectTile = function(event) {
-  if (isInvalidTile(event)) {
+  if (isInvalidTile(event) || game.win === true || game.loss === true) {
     return
   }
   if (firstTurn) {

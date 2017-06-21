@@ -14,7 +14,8 @@ function generateTiles() {
           east: false,
           west: false
         },
-        goal: null,
+        source: false,
+        sink: false,
         chargeStatus: {
           charged: false,
           chargeAligned: false,
@@ -131,12 +132,12 @@ function defineGoals(candidates) {
     west: true
   }
   source.chargeStatus.charged = true
-  source.goal = 'start-point'
-  sink.goal = 'end-point'
-  let goalCoordinates = []
-  goalCoordinates.push([source.originRow, source.originCol])
-  goalCoordinates.push([sink.originRow, sink.originCol])
-  return goalCoordinates
+  source.source = true
+  sink.sink = true
+  let sourceAndSink = []
+  sourceAndSink.push([source.originRow, source.originCol])
+  sourceAndSink.push([sink.originRow, sink.originCol])
+  return sourceAndSink
 }
 
 function findAdjacentTiles(coords) {
@@ -155,7 +156,7 @@ function findAdjacentTiles(coords) {
     if (!(currentCoords[0] < 1 || currentCoords[0] > 6 || currentCoords[1] < 1 || currentCoords[1] > 6)) {
       adjacentTiles.push(currentCoords)
     }
-    else if ((currentCoords[0] === 0 || currentCoords[0] === 7 || currentCoords[1] === 0 || currentCoords[1] === 7) && game.board[currentCoords[0]][currentCoords[1]].goal === 'end-point') {
+    else if ((currentCoords[0] === 0 || currentCoords[0] === 7 || currentCoords[1] === 0 || currentCoords[1] === 7) && game.board[currentCoords[0]][currentCoords[1]].sink === true) {
       adjacentTiles.push(currentCoords)
     }
     else {
@@ -242,7 +243,7 @@ function countLiveTiles(startingPoint) {
       let adjacent = findAdjacentTiles(currentlyScanningTiles[i])
       for (let j = 0; j < adjacent.length; j++) {
         if (adjacent[j] && countedLiveTiles) {
-          if (!(hasBeenCounted(adjacent[j], countedLiveTiles) || hasBeenCounted(adjacent[j], toBeScanned) || hasBeenCounted(adjacent[j], currentlyScanningTiles) || game.board[adjacent[j][0]][adjacent[j][1]].image === 'dead-tile' || game.board[adjacent[j][0]][adjacent[j][1]].goal === 'end-point')) {
+          if (!(hasBeenCounted(adjacent[j], countedLiveTiles) || hasBeenCounted(adjacent[j], toBeScanned) || hasBeenCounted(adjacent[j], currentlyScanningTiles) || game.board[adjacent[j][0]][adjacent[j][1]].image === 'dead-tile' || game.board[adjacent[j][0]][adjacent[j][1]].sink === true)) {
             toBeScanned.push(adjacent[j])
           }
         }
@@ -287,8 +288,11 @@ function renderTile(tile, rowNum) {
   if (tile.isSelected === true) {
     $tile.classList.add('selected')
   }
-  if (tile.goal) {
-    $tile.classList.add(tile.goal)
+  if (tile.source) {
+    $tile.classList.add('start-point')
+  }
+  if (tile.sink) {
+    $tile.classList.add('end-point')
   }
   $tile.textContent = 'row-' + tile.originRow + ' column-' + tile.originCol
   return $tile
@@ -386,7 +390,7 @@ function getValidChannels(coordinates) {
 }
 
 function isValidChargePath(tile) {
-  return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false && tile.chargeStatus.charged === false && (tile.isHidden === false || tile.goal === 'end-point')
+  return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false && tile.chargeStatus.charged === false && (tile.isHidden === false || tile.sink === true)
 }
 
 function getOppositeDirection(validChannel) {

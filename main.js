@@ -289,10 +289,10 @@ function renderTile(tile, rowNum) {
     $tile.classList.add('selected')
   }
   if (tile.source) {
-    $tile.classList.add('start-point')
+    $tile.classList.add('source')
   }
   if (tile.sink) {
-    $tile.classList.add('end-point')
+    $tile.classList.add('sink')
   }
   $tile.textContent = 'row-' + tile.originRow + ' column-' + tile.originCol
   return $tile

@@ -121,11 +121,11 @@ ul li {
   background-color: gold;
 }
 
-.start-point {
+.source {
   background-color: red;
 }
 
-.start-point.charged {
+.source.charged {
   background-color: aqua;
   animation: start-blink 2s infinite;
 }
@@ -134,11 +134,11 @@ ul li {
   background-color: aqua;
 }
 
-.end-point {
+.sink {
   background-color: green;
 }
 
-.end-point.charged {
+.sink.charged {
   background-color: aqua;
   animation: end-blink 2s infinite;
 }

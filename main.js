@@ -476,21 +476,17 @@ function moveChargeOneTile(chargeCoordinates) {
   return currentChargeCoordinates
 }
 
-function animateCharge(chargeCoordinates) {
-  if (game.win === false) {
-    window.setTimeout(animateCharge, 1000)
-  }
-  console.log(game.timer)
+function animateCharge(timer) {
   let $tileImage = document.getElementById('row-' + game.chargeCoordinates[0] + ' column-' + game.chargeCoordinates[1] + ' image')
   let $tile = document.getElementById('row-' + game.chargeCoordinates[0] + ' column-' + game.chargeCoordinates[1])
   let tile = game.board[game.chargeCoordinates[0]][game.chargeCoordinates[1]]
   if ($tileImage && hasClass($tileImage, 'charged')) {
-    if (hasClass($tileImage, ('charge-phase-' + ((game.timer / 2) - 1)))) {
-      $tileImage.classList.remove('charge-phase-' + ((game.timer / 2) - 1))
-      $tile.classList.remove('charge-phase-' + ((game.timer / 2) - 1))
-      tile.chargeStatus.chargePhase = (game.timer / 2)
-      $tileImage.classList.add('charge-phase-' + (game.timer / 2))
-      $tile.classList.add('charge-phase-' + (game.timer / 2))
+    if (hasClass($tileImage, ('charge-phase-' + (timer - 1)))) {
+      $tileImage.classList.remove('charge-phase-' + timer - 1)
+      $tile.classList.remove('charge-phase-' + (timer - 1))
+      tile.chargeStatus.chargePhase = timer
+      $tileImage.classList.add('charge-phase-' + timer)
+      $tile.classList.add('charge-phase-' + timer)
     }
     else {
       $tileImage.classList.add('charge-phase-0')
@@ -528,6 +524,7 @@ let restartGame = function() {
 }
 
 function startTimer() {
+  console.log(game.timer)
   let $timerText = document.getElementById('timer-text')
   let $countdown = document.getElementById('countdown')
   let $restart = document.createElement('button')
@@ -560,10 +557,12 @@ function startTimer() {
     game.timer++
     if (game.timer % 2 === 0) {
       $countdown.textContent = (5 - Math.floor(game.timer / 2))
+      animateCharge((Math.floor(game.timer / 2)))
     }
     if (game.timer === 10) {
       pushCharge()
       game.timer = 0
+      animateCharge(0)
     }
   }
   game.isFirstTurn = false

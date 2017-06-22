@@ -18,6 +18,7 @@ function generateTiles() {
         sink: false,
         chargeStatus: {
           charged: false,
+          chargePhase: null,
           chargeAligned: false,
           spent: false
         }
@@ -321,6 +322,12 @@ function renderRow(tiles, rowNum) {
       if (tiles[i].chargeStatus.charged === true) {
         $tile.classList.add('charged')
         $tileImage.classList.add('charged')
+        for (let j = 0; j < 5; j++) {
+          if (tiles[i].chargeStatus.chargePhase === j) {
+            $tile.classList.add('charge-phase-' + j)
+            $tileImage.classList.add('charge-phase-' + j)
+          }
+        }
       }
       if (tiles[i].chargeStatus.spent === true) {
         $tileImage.classList.add('spent')
@@ -469,6 +476,32 @@ function moveChargeOneTile(chargeCoordinates) {
   return currentChargeCoordinates
 }
 
+function animateCharge(timer) {
+  let $tileImage = document.getElementById('row-' + game.chargeCoordinates[0] + ' column-' + game.chargeCoordinates[1] + ' image')
+  let $tile = document.getElementById('row-' + game.chargeCoordinates[0] + ' column-' + game.chargeCoordinates[1])
+  let tile = game.board[game.chargeCoordinates[0]][game.chargeCoordinates[1]]
+  if (game.loss === true) {
+    $tileImage.classList.remove('charge-phase-0')
+    $tile.classList.remove('charge-phase-0')
+    $tileImage.classList.add('charge-phase-4')
+    $tile.classList.add('charge-phase-4')
+  }
+  if ($tileImage && hasClass($tileImage, 'charged')) {
+    if (hasClass($tileImage, ('charge-phase-' + (timer - 1)))) {
+      $tileImage.classList.remove('charge-phase-' + timer - 1)
+      $tile.classList.remove('charge-phase-' + (timer - 1))
+      tile.chargeStatus.chargePhase = timer
+      $tileImage.classList.add('charge-phase-' + timer)
+      $tile.classList.add('charge-phase-' + timer)
+    }
+    else {
+      $tileImage.classList.add('charge-phase-0')
+      $tile.classList.add('charge-phase-0')
+      tile.chargeStatus.chargePhase = 0
+    }
+  }
+}
+
 function updateBoardRender(board) {
   findChargePath(game.chargeCoordinates)
   winCheck(game.sink)
@@ -529,10 +562,12 @@ function startTimer() {
     game.timer++
     if (game.timer % 2 === 0) {
       $countdown.textContent = (5 - Math.floor(game.timer / 2))
+      animateCharge((Math.floor(game.timer / 2)))
     }
     if (game.timer === 10) {
       pushCharge()
       game.timer = 0
+      animateCharge(0)
     }
   }
   game.isFirstTurn = false
@@ -559,6 +594,7 @@ let selectTile = function(event) {
     return
   }
   if (game.isFirstTurn) {
+    animateCharge(game.chargeCoordinates)
     startTimer()
   }
   if (game.selectedTiles.length) {
@@ -639,6 +675,7 @@ let game = {
   demo: true,
   timer: 0,
   chargeCoordinates: null,
+  chargePhase: 1,
   source: null,
   sink: null,
   selectedTiles: null,

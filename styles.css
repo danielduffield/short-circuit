@@ -172,3 +172,23 @@ ul li {
 .timer-display {
   font-size: 2em;
 }
+
+.charged.charge-phase-0 {
+  background-color: aqua;
+}
+
+.charged.charge-phase-1 {
+  background-color: deepSkyBlue;
+}
+
+.charged.charge-phase-2 {
+  background-color: mediumPurple;
+}
+
+.charged.charge-phase-3 {
+  background-color: deepPink;
+}
+
+.charged.charge-phase-4 {
+  background-color: red;
+}

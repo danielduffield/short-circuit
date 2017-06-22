@@ -18,6 +18,7 @@ function generateTiles() {
         sink: false,
         chargeStatus: {
           charged: false,
+          chargePhase: null,
           chargeAligned: false,
           spent: false
         }
@@ -321,6 +322,12 @@ function renderRow(tiles, rowNum) {
       if (tiles[i].chargeStatus.charged === true) {
         $tile.classList.add('charged')
         $tileImage.classList.add('charged')
+        for (let j = 0; j < 5; j++) {
+          if (tiles[i].chargeStatus.chargePhase === j) {
+            $tile.classList.add('charge-phase-' + j)
+            $tileImage.classList.add('charge-phase-' + j)
+          }
+        }
       }
       if (tiles[i].chargeStatus.spent === true) {
         $tileImage.classList.add('spent')
@@ -469,6 +476,30 @@ function moveChargeOneTile(chargeCoordinates) {
   return currentChargeCoordinates
 }
 
+function animateCharge(chargeCoordinates) {
+  if (game.win === false) {
+    window.setTimeout(animateCharge, 1000)
+  }
+  console.log(game.timer)
+  let $tileImage = document.getElementById('row-' + game.chargeCoordinates[0] + ' column-' + game.chargeCoordinates[1] + ' image')
+  let $tile = document.getElementById('row-' + game.chargeCoordinates[0] + ' column-' + game.chargeCoordinates[1])
+  let tile = game.board[game.chargeCoordinates[0]][game.chargeCoordinates[1]]
+  if ($tileImage && hasClass($tileImage, 'charged')) {
+    if (hasClass($tileImage, ('charge-phase-' + ((game.timer / 2) - 1)))) {
+      $tileImage.classList.remove('charge-phase-' + ((game.timer / 2) - 1))
+      $tile.classList.remove('charge-phase-' + ((game.timer / 2) - 1))
+      tile.chargeStatus.chargePhase = (game.timer / 2)
+      $tileImage.classList.add('charge-phase-' + (game.timer / 2))
+      $tile.classList.add('charge-phase-' + (game.timer / 2))
+    }
+    else {
+      $tileImage.classList.add('charge-phase-0')
+      $tile.classList.add('charge-phase-0')
+      tile.chargeStatus.chargePhase = 0
+    }
+  }
+}
+
 function updateBoardRender(board) {
   findChargePath(game.chargeCoordinates)
   winCheck(game.sink)
@@ -559,6 +590,7 @@ let selectTile = function(event) {
     return
   }
   if (game.isFirstTurn) {
+    animateCharge(game.chargeCoordinates)
     startTimer()
   }
   if (game.selectedTiles.length) {
@@ -639,6 +671,7 @@ let game = {
   demo: true,
   timer: 0,
   chargeCoordinates: null,
+  chargePhase: 1,
   source: null,
   sink: null,
   selectedTiles: null,

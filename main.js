@@ -826,6 +826,12 @@ function replaceSpannedWithTitle() {
   document.body.appendChild($title)
 }
 
+function reloadTitle() {
+  let $title = document.getElementById('animated-title')
+  document.body.removeChild($title)
+  document.body.appendChild($title)
+}
+
 let letterIndex = 0
 let cycles = 0
 

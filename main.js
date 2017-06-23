@@ -346,10 +346,20 @@ function renderRow(tiles, rowNum) {
 }
 
 function renderTileImage(tile, $tile) {
+  let tileStatus = Object.keys(tile.chargeStatus)
+  tileStatus = tileStatus.filter(function (key) {
+    return tile.chargeStatus[key] === true
+  })
   let $tileImage = new Image(60, 60)
-  $tileImage.src = 'images/channels-rough/' + tile.image + '.png'
+  if (tileStatus.length && tileStatus[0] !== 'charged') {
+    $tileImage.src = 'images/' + tileStatus + '-' + tile.image + '.png'
+  }
+  else {
+    $tileImage.src = 'images/' + tile.image + '.png'
+  }
   $tileImage.classList.add('channel-render')
   $tileImage.setAttribute('id', 'row-' + $tile.id[4] + ' column-' + $tile.id[13] + ' image')
+  $tileImage.imageSmoothingEnabled = false
   return $tileImage
 }
 

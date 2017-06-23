@@ -745,6 +745,12 @@ function getSpannedTitle() {
   return $spannedTitle
 }
 
+function replaceTitleWithSpanned($spannedTitle) {
+  let $title = document.getElementById('main-title')
+  document.body.removeChild($title)
+  document.body.appendChild($spannedTitle)
+}
+
 demoTimer()
 let $start = document.getElementById('start-button')
 $start.addEventListener('click', startGame)

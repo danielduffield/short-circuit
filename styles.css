@@ -130,34 +130,42 @@ ul li {
 
 .source-0 {
   background-image: url('images/source-0.png');
+  border: 1px solid black;
 }
 
 .source-1 {
   background-image: url('images/source-1.png');
+  border: 1px solid black;
 }
 
 .source-2 {
   background-image: url('images/source-2.png');
+  border: 1px solid black;
 }
 
 .source-3 {
   background-image: url('images/source-3.png');
+  border: 1px solid black;
 }
 
 .sink-0 {
   background-image: url('images/sink-0.png');
+  border: 1px solid black;
 }
 
 .sink-1 {
   background-image: url('images/sink-1.png');
+  border: 1px solid black;
 }
 
 .sink-2 {
   background-image: url('images/sink-2.png');
+  border: 1px solid black;
 }
 
 .sink-3 {
   background-image: url('images/sink-3.png');
+  border: 1px solid black;
 }
 
 .source.charged {

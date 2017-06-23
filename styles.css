@@ -105,7 +105,11 @@ ul li {
 }
 
 .channel-render.charge-aligned {
-  background-color: orange;
+  background-color: black;
+}
+
+.channel-render.charge-aligned.selected {
+  background-color: gold;
 }
 
 .channel-render.charged {

@@ -31,7 +31,7 @@ h1 {
   width: 77px;
   height: 77px;
   background-color: darkblue;
-  border: 2px solid blue;
+  border: 2px solid black;
   float: left;
 }
 
@@ -194,4 +194,25 @@ ul li {
 
 .charged.charge-phase-4 {
   background-color: red;
+}
+
+.spent {
+  animation: spent-blink 2s infinite;
+}
+
+@-webkit-keyframes spent-blink {
+  0%,
+  33% {
+    background-color: black;
+  }
+
+  66%,
+  100% {
+    background-color: gold;
+  }
+
+  66%,
+  100% {
+    background-color: aqua;
+  }
 }

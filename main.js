@@ -290,10 +290,32 @@ function renderTile(tile, rowNum) {
     $tile.classList.add('selected')
   }
   if (tile.source) {
-    $tile.classList.add('source')
+    if (tile.originRow === 0) {
+      $tile.classList.add('source-2')
+    }
+    if (tile.originRow === 7) {
+      $tile.classList.add('source-0')
+    }
+    if (tile.originCol === 0) {
+      $tile.classList.add('source-1')
+    }
+    if (tile.originCol === 7) {
+      $tile.classList.add('source-3')
+    }
   }
   if (tile.sink) {
-    $tile.classList.add('sink')
+    if (tile.originRow === 0) {
+      $tile.classList.add('sink-2')
+    }
+    if (tile.originRow === 7) {
+      $tile.classList.add('sink-0')
+    }
+    if (tile.originCol === 0) {
+      $tile.classList.add('sink-1')
+    }
+    if (tile.originCol === 7) {
+      $tile.classList.add('sink-3')
+    }
   }
   $tile.textContent = 'row-' + tile.originRow + ' column-' + tile.originCol
   return $tile

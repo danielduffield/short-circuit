@@ -128,6 +128,38 @@ ul li {
   background-color: green;
 }
 
+.source-0 {
+  background-image: url('images/source-0.png');
+}
+
+.source-1 {
+  background-image: url('images/source-1.png');
+}
+
+.source-2 {
+  background-image: url('images/source-2.png');
+}
+
+.source-3 {
+  background-image: url('images/source-3.png');
+}
+
+.sink-0 {
+  background-image: url('images/sink-0.png');
+}
+
+.sink-1 {
+  background-image: url('images/sink-1.png');
+}
+
+.sink-2 {
+  background-image: url('images/sink-2.png');
+}
+
+.sink-3 {
+  background-image: url('images/sink-3.png');
+}
+
 .source.charged {
   background-color: aqua;
   animation: start-blink 2s infinite;

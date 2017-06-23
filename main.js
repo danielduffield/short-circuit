@@ -740,6 +740,7 @@ function getSpannedTitle() {
     let $spanLetter = document.createElement('span')
     $spanLetter.setAttribute('id', 'span-' + i)
     $spanLetter.textContent = titleText[i]
+    $spanLetter.classList.add('span-title')
     $spannedTitle.appendChild($spanLetter)
   }
   return $spannedTitle

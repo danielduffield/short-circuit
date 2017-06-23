@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -728,6 +730,121 @@ function demoTimer() {
     $demoBoardSlot.appendChild($demoBoard)
   }
 }
+
+function getSpannedTitle() {
+  let $title = document.getElementById('main-title')
+  let $spannedTitle = document.createElement('h1')
+  $spannedTitle.setAttribute('id', 'animated-title')
+  let titleText = $title.textContent
+  for (let i = 0; i < titleText.length; i++) {
+    let $spanLetter = document.createElement('span')
+    $spanLetter.setAttribute('id', 'span-' + i)
+    $spanLetter.textContent = titleText[i]
+    $spanLetter.classList.add('span-title')
+    $spannedTitle.appendChild($spanLetter)
+  }
+  return $spannedTitle
+}
+
+function replaceTitleWithSpanned($spannedTitle) {
+  let $title = document.getElementById('main-title')
+  let $titleContainer = document.getElementById('title-container')
+  $titleContainer.removeChild($title)
+  $titleContainer.appendChild($spannedTitle)
+}
+
+function animateTitleForward() {
+  if (cycles > 41) {
+    let $lastLetter = document.getElementById('span-20')
+    if ($lastLetter.classList.length) {
+      $lastLetter.classList.remove('charged')
+    }
+    return
+  }
+  window.setTimeout(animateTitleForward, 100)
+  if (letterIndex === 0) {
+    let $lastLetter = document.getElementById('span-20')
+    if ($lastLetter.classList.length) {
+      $lastLetter.classList.remove('charged')
+    }
+  }
+  if (letterIndex - 1 >= 0) {
+    let $lastLetter = document.getElementById('span-' + (letterIndex - 1))
+    $lastLetter.classList.remove('charged')
+  }
+  let $currentLetter = document.getElementById('span-' + letterIndex)
+  $currentLetter.classList.add('charged')
+  letterIndex++
+  if (letterIndex === 21) {
+    if (cycles > 40) {
+      letterIndex = 20
+    }
+    else {
+      letterIndex = 0
+    }
+  }
+  cycles++
+}
+
+function animateTitleBackward() {
+  if (cycles < 1) {
+    let $lastLetter = document.getElementById('span-0')
+    if ($lastLetter.classList.length) {
+      $lastLetter.classList.remove('charged')
+    }
+    return
+  }
+  window.setTimeout(animateTitleBackward, 100)
+  if (letterIndex === 20) {
+    let $lastLetter = document.getElementById('span-0')
+    if ($lastLetter.classList.length) {
+      $lastLetter.classList.remove('charged')
+    }
+  }
+  if (letterIndex + 1 <= 20) {
+    let $lastLetter = document.getElementById('span-' + (letterIndex + 1))
+    $lastLetter.classList.remove('charged')
+  }
+  let $currentLetter = document.getElementById('span-' + letterIndex)
+  $currentLetter.classList.add('charged')
+  letterIndex--
+  if (letterIndex === -1) {
+    if (cycles === 1) {
+      letterIndex = 0
+    }
+    else {
+      letterIndex = 20
+    }
+  }
+  cycles--
+}
+
+function replaceSpannedWithTitle() {
+  let $title = document.createElement('h1')
+  let $spannedTitle = document.getElementById('animated-title')
+  $title.textContent = '/-/ SH0RT.C1RCU1T /+/'
+  $title.setAttribute('id', 'main-title')
+  let $titleContainer = document.getElementById('title-container')
+  $titleContainer.removeChild($spannedTitle)
+  $titleContainer.appendChild($title)
+}
+
+function reloadTitle() {
+  let $title = document.getElementById('animated-title')
+  let $titleContainer = document.getElementById('title-container')
+  $titleContainer.removeChild($title)
+  $titleContainer.appendChild($title)
+}
+
+let letterIndex = 0
+let cycles = 0
+
+replaceTitleWithSpanned(getSpannedTitle())
+window.setTimeout(animateTitleForward, 4000)
+window.setTimeout(reloadTitle, 8500)
+window.setTimeout(animateTitleBackward, 12500)
+window.setTimeout(reloadTitle, 17000)
+window.setTimeout(replaceSpannedWithTitle, 21000)
 
 demoTimer()
 let $start = document.getElementById('start-button')

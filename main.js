@@ -747,8 +747,9 @@ function getSpannedTitle() {
 
 function replaceTitleWithSpanned($spannedTitle) {
   let $title = document.getElementById('main-title')
-  document.body.removeChild($title)
-  document.body.appendChild($spannedTitle)
+  let $titleContainer = document.getElementById('title-container')
+  $titleContainer.removeChild($title)
+  $titleContainer.appendChild($spannedTitle)
 }
 
 function animateTitleForward() {
@@ -822,18 +823,27 @@ function replaceSpannedWithTitle() {
   let $spannedTitle = document.getElementById('animated-title')
   $title.textContent = '/-/ SH0RT.C1RCU1T /+/'
   $title.setAttribute('id', 'main-title')
-  document.body.removeChild($spannedTitle)
-  document.body.appendChild($title)
+  let $titleContainer = document.getElementById('title-container')
+  $titleContainer.removeChild($spannedTitle)
+  $titleContainer.appendChild($title)
 }
 
 function reloadTitle() {
   let $title = document.getElementById('animated-title')
-  document.body.removeChild($title)
-  document.body.appendChild($title)
+  let $titleContainer = document.getElementById('title-container')
+  $titleContainer.removeChild($title)
+  $titleContainer.appendChild($title)
 }
 
 let letterIndex = 0
 let cycles = 0
+
+replaceTitleWithSpanned(getSpannedTitle())
+window.setTimeout(animateTitleForward, 4000)
+window.setTimeout(reloadTitle, 8500)
+window.setTimeout(animateTitleBackward, 12500)
+window.setTimeout(reloadTitle, 17000)
+window.setTimeout(replaceSpannedWithTitle, 21000)
 
 demoTimer()
 let $start = document.getElementById('start-button')

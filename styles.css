@@ -26,6 +26,11 @@ h1 {
   animation: title-glow 2s 2;
 }
 
+span {
+  font-family: 'Share Tech Mono', monospace;
+  background-color: black;
+}
+
 .board-row {
   overflow: hidden;
 }

@@ -20,7 +20,9 @@ h1 {
   text-align: center;
   font-family: 'Share Tech Mono', monospace;
   font-size: 3em;
-  padding: 20px 0 0;
+  padding: 20px 0 10px;
+  background-color: black;
+  color: steelblue;
 }
 
 .board-row {
@@ -79,17 +81,24 @@ h1 {
   position: relative;
   bottom: 200px;
   margin: 0 50px 0 0;
+  background-color: whitesmoke;
 }
 
 ul li {
   list-style-type: square;
   margin: 20px 0;
+  background-color: whitesmoke;
+}
+
+ul {
+  background-color: whitesmoke;
 }
 
 #instructions-title {
   margin: 5px;
   text-align: center;
   font-size: 1.75em;
+  background-color: whitesmoke;
 }
 
 #charge-button {

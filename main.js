@@ -290,10 +290,32 @@ function renderTile(tile, rowNum) {
     $tile.classList.add('selected')
   }
   if (tile.source) {
-    $tile.classList.add('source')
+    if (tile.originRow === 0) {
+      $tile.classList.add('source-2')
+    }
+    if (tile.originRow === 7) {
+      $tile.classList.add('source-0')
+    }
+    if (tile.originCol === 0) {
+      $tile.classList.add('source-1')
+    }
+    if (tile.originCol === 7) {
+      $tile.classList.add('source-3')
+    }
   }
   if (tile.sink) {
-    $tile.classList.add('sink')
+    if (tile.originRow === 0) {
+      $tile.classList.add('sink-2')
+    }
+    if (tile.originRow === 7) {
+      $tile.classList.add('sink-0')
+    }
+    if (tile.originCol === 0) {
+      $tile.classList.add('sink-1')
+    }
+    if (tile.originCol === 7) {
+      $tile.classList.add('sink-3')
+    }
   }
   $tile.textContent = 'row-' + tile.originRow + ' column-' + tile.originCol
   return $tile
@@ -346,10 +368,20 @@ function renderRow(tiles, rowNum) {
 }
 
 function renderTileImage(tile, $tile) {
-  let $tileImage = new Image(60, 60)
-  $tileImage.src = 'images/channels-rough/' + tile.image + '.png'
+  let tileStatus = Object.keys(tile.chargeStatus)
+  tileStatus = tileStatus.filter(function (key) {
+    return tile.chargeStatus[key] === true
+  })
+  let $tileImage = new Image(75, 75)
+  if (tileStatus.length) {
+    $tileImage.src = 'images/' + tileStatus + '-' + tile.image + '.png'
+  }
+  else {
+    $tileImage.src = 'images/' + tile.image + '.png'
+  }
   $tileImage.classList.add('channel-render')
   $tileImage.setAttribute('id', 'row-' + $tile.id[4] + ' column-' + $tile.id[13] + ' image')
+  $tileImage.imageSmoothingEnabled = false
   return $tileImage
 }
 

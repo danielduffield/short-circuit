@@ -351,7 +351,7 @@ function renderTileImage(tile, $tile) {
     return tile.chargeStatus[key] === true
   })
   let $tileImage = new Image(70, 70)
-  if (tileStatus.length && tileStatus[0] !== 'charged') {
+  if (tileStatus.length) {
     $tileImage.src = 'images/' + tileStatus + '-' + tile.image + '.png'
   }
   else {

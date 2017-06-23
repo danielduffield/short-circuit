@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 function generateTiles() {
   let tiles = []
   for (let i = 0; i < 8; i++) {
@@ -727,6 +729,20 @@ function demoTimer() {
     }
     $demoBoardSlot.appendChild($demoBoard)
   }
+}
+
+function getSpannedTitle() {
+  let $title = document.getElementById('main-title')
+  let $spannedTitle = document.createElement('h1')
+  $spannedTitle.setAttribute('id', 'animated-title')
+  let titleText = $title.textContent
+  for (let i = 0; i < titleText.length; i++) {
+    let $spanLetter = document.createElement('span')
+    $spanLetter.setAttribute('id', 'span-' + i)
+    $spanLetter.textContent = titleText[i]
+    $spannedTitle.appendChild($spanLetter)
+  }
+  return $spannedTitle
 }
 
 demoTimer()

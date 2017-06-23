@@ -751,6 +751,42 @@ function replaceTitleWithSpanned($spannedTitle) {
   document.body.appendChild($spannedTitle)
 }
 
+function animateTitleForward() {
+  if (cycles > 41) {
+    let $lastLetter = document.getElementById('span-20')
+    if ($lastLetter.classList.length) {
+      $lastLetter.classList.remove('charged')
+    }
+    return
+  }
+  window.setTimeout(animateTitleForward, 100)
+  if (letterIndex === 0) {
+    let $lastLetter = document.getElementById('span-20')
+    if ($lastLetter.classList.length) {
+      $lastLetter.classList.remove('charged')
+    }
+  }
+  if (letterIndex - 1 >= 0) {
+    let $lastLetter = document.getElementById('span-' + (letterIndex - 1))
+    $lastLetter.classList.remove('charged')
+  }
+  let $currentLetter = document.getElementById('span-' + letterIndex)
+  $currentLetter.classList.add('charged')
+  letterIndex++
+  if (letterIndex === 21) {
+    if (cycles > 40) {
+      letterIndex = 20
+    }
+    else {
+      letterIndex = 0
+    }
+  }
+  cycles++
+}
+
+let letterIndex = 0
+let cycles = 0
+
 demoTimer()
 let $start = document.getElementById('start-button')
 $start.addEventListener('click', startGame)

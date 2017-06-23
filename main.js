@@ -817,6 +817,15 @@ function animateTitleBackward() {
   cycles--
 }
 
+function replaceSpannedWithTitle() {
+  let $title = document.createElement('h1')
+  let $spannedTitle = document.getElementById('animated-title')
+  $title.textContent = '/-/ SH0RT.C1RCU1T /+/'
+  $title.setAttribute('id', 'main-title')
+  document.body.removeChild($spannedTitle)
+  document.body.appendChild($title)
+}
+
 let letterIndex = 0
 let cycles = 0
 

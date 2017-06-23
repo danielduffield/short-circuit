@@ -23,6 +23,7 @@ h1 {
   padding: 20px 0 10px;
   background-color: black;
   color: steelblue;
+  animation: title-glow 2s 2;
 }
 
 .board-row {
@@ -263,5 +264,22 @@ ul {
   66%,
   100% {
     background-color: aqua;
+  }
+}
+
+@-webkit-keyframes title-glow {
+  0%,
+  33% {
+    color: steelblue;
+  }
+
+  33%,
+  66% {
+    color: aqua;
+  }
+
+  66%,
+  100% {
+    color: steelblue;
   }
 }

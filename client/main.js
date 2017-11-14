@@ -5,69 +5,12 @@ const generateChannel = require('./utils/generate-channel.js')
 const { isHidden, isHiddenCorner } = require('./utils/is-hidden.js')
 const getGoalCandidates = require('./utils/get-goal-candidates.js')
 const shuffleArray = require('./utils/shuffle-array.js')
-
-function defineGoals(candidates) {
-  let shuffledCandidates = shuffleArray(candidates)
-  let source = shuffledCandidates.pop()
-  let sourceCoordinates = [source.originRow, source.originCol]
-  let sink = shuffledCandidates.pop()
-  let sinkCoordinates = [sink.originRow, sink.originCol]
-  let distance = distanceCheck(sourceCoordinates, sinkCoordinates)
-  while (distance < 4) {
-    sink = shuffledCandidates.pop()
-    sinkCoordinates = [sink.originRow, sink.originCol]
-    distance = distanceCheck(sourceCoordinates, sinkCoordinates)
-  }
-  source.channels = {
-    north: true,
-    south: true,
-    east: true,
-    west: true
-  }
-  sink.channels = {
-    north: true,
-    south: true,
-    east: true,
-    west: true
-  }
-  source.chargeStatus.charged = true
-  source.source = true
-  sink.sink = true
-  let sourceAndSink = []
-  sourceAndSink.push([source.originRow, source.originCol])
-  sourceAndSink.push([sink.originRow, sink.originCol])
-  return sourceAndSink
-}
-
-function findAdjacentTiles(coords) {
-  let adjacentCandidates = []
-  let adjacentTiles = []
-  let x = coords[0]
-  let y = coords[1]
-  adjacentCandidates = [
-    [x - 1, y], // north
-    [x + 1, y], // south
-    [x, y + 1], // east
-    [x, y - 1] // west
-  ]
-  for (let i = 0; i < adjacentCandidates.length; i++) {
-    let currentCoords = adjacentCandidates[i]
-    if (!(currentCoords[0] < 1 || currentCoords[0] > 6 || currentCoords[1] < 1 || currentCoords[1] > 6)) {
-      adjacentTiles.push(currentCoords)
-    }
-    else if ((currentCoords[0] === 0 || currentCoords[0] === 7 || currentCoords[1] === 0 || currentCoords[1] === 7) && game.board[currentCoords[0]][currentCoords[1]].sink === true) {
-      adjacentTiles.push(currentCoords)
-    }
-    else {
-      adjacentTiles.push(null)
-    }
-  }
-  return adjacentTiles
-}
+const defineGoals = require('./utils/define-goals.js')
+const findAdjacentTiles = require('./utils/find-adjacent-tiles.js')
 
 function checkGoalObstruction(goalCoordinates) {
   for (let i = 0; i < 2; i++) {
-    let adjacent = findAdjacentTiles(goalCoordinates[i])
+    let adjacent = findAdjacentTiles(game.board, goalCoordinates[i])
     let keepUnblocked = []
     for (let j = 0; j < adjacent.length; j++) {
       if (adjacent[j]) {
@@ -79,11 +22,6 @@ function checkGoalObstruction(goalCoordinates) {
     }
   }
   return game.board
-}
-
-function distanceCheck(pointA, pointB) {
-  let distance = Math.hypot((pointA[1] - pointB[1]), (pointA[0] - pointB[0]))
-  return distance
 }
 
 function partitionCheck(board) {
@@ -139,7 +77,7 @@ function countLiveTiles(startingPoint) {
       currentlyScanningTiles.push(toBeScanned.pop())
     }
     for (let i = 0; i < currentlyScanningTiles.length; i++) {
-      let adjacent = findAdjacentTiles(currentlyScanningTiles[i])
+      let adjacent = findAdjacentTiles(game.board, currentlyScanningTiles[i])
       for (let j = 0; j < adjacent.length; j++) {
         if (adjacent[j] && countedLiveTiles) {
           if (!(hasBeenCounted(adjacent[j], countedLiveTiles) || hasBeenCounted(adjacent[j], toBeScanned) || hasBeenCounted(adjacent[j], currentlyScanningTiles) || game.board[adjacent[j][0]][adjacent[j][1]].image === 'dead-tile' || game.board[adjacent[j][0]][adjacent[j][1]].sink === true)) {
@@ -358,7 +296,7 @@ function findChargePath(chargeCoordinates) {
   let inChargePath = chargeCoordinates
   let lastChargedTile = 0
   while (inChargePath) {
-    let adjacent = findAdjacentTiles(inChargePath)
+    let adjacent = findAdjacentTiles(game.board, inChargePath)
     let validChannels = getValidChannels(inChargePath)
     lastChargedTile = inChargePath
     for (let i = 0; i < validChannels.length; i++) {
@@ -386,7 +324,7 @@ function winCheck(endPoint) {
 function moveChargeOneTile(chargeCoordinates) {
   let currentChargeCoordinates = chargeCoordinates
   let currentlyChargedTile = game.board[chargeCoordinates[0]][chargeCoordinates[1]]
-  let adjacent = findAdjacentTiles(chargeCoordinates)
+  let adjacent = findAdjacentTiles(game.board, chargeCoordinates)
   let validChannels = getValidChannels(chargeCoordinates)
   for (let i = 0; i < adjacent.length; i++) {
     if (adjacent[validChannels[i]]) {

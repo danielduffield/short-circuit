@@ -11,18 +11,8 @@ const checkGoalObstruction = require('./utils/check-goal-obstruction.js')
 const partitionCheck = require('./utils/partition-check.js')
 const generateBoard = require('./utils/generate-board.js')
 const renderBoard = require('./utils/render-board.js')
-
-function swapTiles(coordinates) {
-  let i = coordinates[0]
-  let j = coordinates[1]
-  let firstSelected = game.board[i[0]][i[1]]
-  let secondSelected = game.board[j[0]][j[1]]
-  game.board[i[0]][i[1]] = secondSelected
-  game.board[j[0]][j[1]] = firstSelected
-  game.board[i[0]][i[1]].isSelected = false
-  game.board[j[0]][j[1]].isSelected = false
-  return game.board
-}
+const swapTiles = require('./utils/swap-tiles.js')
+const getValidChannels = require('./utils/get-valid-channels.js')
 
 function hasClass(element, clsName) {
   return (' ' + element.className + ' ').indexOf(' ' + clsName + ' ') > -1
@@ -30,29 +20,6 @@ function hasClass(element, clsName) {
 
 function isInvalidTile(event) {
   return ((hasClass(event.target, 'dead-tile')) || (hasClass(event.target, 'hidden-tile')) || (hasClass(event.target, 'charged')) || (hasClass(event.target, 'spent'))) && ((!(hasClass(event.target, 'board-tile'))) || (!(hasClass(event.target, 'channel-render'))))
-}
-
-function getValidChannels(coordinates) {
-  let validChannels = Object.keys(game.board[coordinates[0]][coordinates[1]].channels)
-  validChannels = validChannels.filter(function (key) {
-    return game.board[coordinates[0]][coordinates[1]].channels[key] === true
-  })
-  for (let i = 0; i < validChannels.length; i++) {
-    switch (validChannels[i]) {
-      case 'north':
-        validChannels[i] = 0
-        break
-      case 'south':
-        validChannels[i] = 1
-        break
-      case 'east':
-        validChannels[i] = 2
-        break
-      case 'west':
-        validChannels[i] = 3
-    }
-  }
-  return validChannels
 }
 
 function isValidChargePath(tile) {
@@ -88,7 +55,7 @@ function findChargePath(chargeCoordinates) {
   let lastChargedTile = 0
   while (inChargePath) {
     let adjacent = findAdjacentTiles(game.board, inChargePath)
-    let validChannels = getValidChannels(inChargePath)
+    let validChannels = getValidChannels(game.board, inChargePath)
     lastChargedTile = inChargePath
     for (let i = 0; i < validChannels.length; i++) {
       let channelOpposite = getOppositeDirection(validChannels[i])
@@ -116,7 +83,7 @@ function moveChargeOneTile(chargeCoordinates) {
   let currentChargeCoordinates = chargeCoordinates
   let currentlyChargedTile = game.board[chargeCoordinates[0]][chargeCoordinates[1]]
   let adjacent = findAdjacentTiles(game.board, chargeCoordinates)
-  let validChannels = getValidChannels(chargeCoordinates)
+  let validChannels = getValidChannels(game.board, chargeCoordinates)
   for (let i = 0; i < adjacent.length; i++) {
     if (adjacent[validChannels[i]]) {
       let adjacentTile = game.board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]]
@@ -271,7 +238,7 @@ let selectTile = function(event) {
     game.selectedTiles = []
   }
   if (game.selectedTiles.length > 1) {
-    game.board = swapTiles(game.selectedTiles)
+    game.board = swapTiles(game.board, game.selectedTiles)
     game.selectedTiles = []
   }
   game.board = updateBoardRender(game.board)

@@ -6,12 +6,17 @@
   "private": true,
   "license": "LicenseRef-LICENSE",
   "scripts": {
+    "bundle": "browserify client/main.js -o server/public/bundle.js",
     "lint": "run-p lint:*",
     "lint:html": "htmlhint ./**/*.html",
     "lint:css": "stylelint ./**/*.css",
     "lint:js": "eslint ./**/*.js",
     "test": "npm run lint",
-    "precommit": "npm test"
+    "precommit": "npm test",
+    "start": "node server/index.js",
+    "watch:client": "watchify client/main.js -v -o server/public/bundle.js",
+    "watch:server": "nodemon server/index.js",
+    "watch": "run-p watch:client watch:server"
   },
   "repository": {
     "type": "git",

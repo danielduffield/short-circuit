@@ -1,5 +1,3 @@
-const shuffleArray = require('./shuffle-array.js')
-
 function defineGoals(candidates) {
   let shuffledCandidates = shuffleArray(candidates)
   let source = shuffledCandidates.pop()
@@ -31,6 +29,17 @@ function defineGoals(candidates) {
   sourceAndSink.push([source.originRow, source.originCol])
   sourceAndSink.push([sink.originRow, sink.originCol])
   return sourceAndSink
+}
+
+function shuffleArray(array) {
+  let shuffled = array.slice()
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1))
+    let temp = shuffled[i]
+    shuffled[i] = shuffled[j]
+    shuffled[j] = temp
+  }
+  return shuffled
 }
 
 function distanceCheck(pointA, pointB) {

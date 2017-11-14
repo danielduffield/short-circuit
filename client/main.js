@@ -1,14 +1,13 @@
 const generateTiles = require('./utils/generate-tiles.js')
 const getGoalCandidates = require('./utils/get-goal-candidates.js')
 const defineGoals = require('./utils/define-goals.js')
-const findAdjacentTiles = require('./utils/find-adjacent-tiles.js')
 const checkGoalObstruction = require('./utils/check-goal-obstruction.js')
 const partitionCheck = require('./utils/partition-check.js')
 const generateBoard = require('./utils/generate-board.js')
 const renderBoard = require('./utils/render-board.js')
 const swapTiles = require('./utils/swap-tiles.js')
-const getValidChannels = require('./utils/get-valid-channels.js')
 const findChargePath = require('./utils/find-charge-path.js')
+const moveChargeOneTile = require('./utils/move-charge-one-tile.js')
 
 function hasClass(element, clsName) {
   return (' ' + element.className + ' ').indexOf(' ' + clsName + ' ') > -1
@@ -22,29 +21,6 @@ function winCheck(endPoint) {
   if (game.board[endPoint[0]][endPoint[1]].chargeStatus.chargeAligned === true) {
     game.win = true
   }
-}
-
-function moveChargeOneTile(chargeCoordinates) {
-  let currentChargeCoordinates = chargeCoordinates
-  let currentlyChargedTile = game.board[chargeCoordinates[0]][chargeCoordinates[1]]
-  let adjacent = findAdjacentTiles(game.board, chargeCoordinates)
-  let validChannels = getValidChannels(game.board, chargeCoordinates)
-  for (let i = 0; i < adjacent.length; i++) {
-    if (adjacent[validChannels[i]]) {
-      let adjacentTile = game.board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]]
-      if (adjacentTile.chargeStatus.chargeAligned === true && adjacentTile.chargeStatus.spent === false) {
-        currentlyChargedTile.chargeStatus.charged = false
-        currentlyChargedTile.chargeStatus.spent = true
-        adjacentTile.chargeStatus.chargeAligned = false
-        adjacentTile.chargeStatus.charged = true
-        currentChargeCoordinates = adjacent[validChannels[i]]
-      }
-    }
-  }
-  if (currentChargeCoordinates === chargeCoordinates) {
-    game.loss = true
-  }
-  return currentChargeCoordinates
 }
 
 function animateCharge(timer) {
@@ -145,7 +121,7 @@ function startTimer() {
 }
 
 let pushCharge = function(event) {
-  game.chargeCoordinates = moveChargeOneTile(game.chargeCoordinates)
+  game = moveChargeOneTile(game)
   game.board = updateBoardRender(game.board)
 }
 

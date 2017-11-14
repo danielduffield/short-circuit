@@ -1,5 +1,5 @@
 const generateChannel = require('./generate-channel.js')
-const isHidden = require('./is-hidden.js')
+const { isHidden } = require('./is-hidden.js')
 
 function generateTiles() {
   let tiles = []

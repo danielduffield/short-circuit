@@ -2,11 +2,7 @@
 
 const generateTiles = require('./utils/generate-tiles.js')
 const generateChannel = require('./utils/generate-channel.js')
-const isHidden = require('./utils/is-hidden.js')
-
-function isHiddenCorner(tile) {
-  return (tile.originRow === 0 && tile.originCol === 0) || (tile.originRow === 0 && tile.originCol === 7) || (tile.originRow === 7 && tile.originCol === 7) || (tile.originRow === 7 && tile.originCol === 0)
-}
+const { isHidden, isHiddenCorner } = require('./utils/is-hidden.js')
 
 function getGoalCandidates(board) {
   let candidates = []

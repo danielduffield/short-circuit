@@ -1,6 +1,5 @@
 const getValidChannels = require('./get-valid-channels.js')
 const findAdjacentTiles = require('./find-adjacent-tiles.js')
-const getOppositeDirection = require('./get-opposite-direction.js')
 
 function findChargePath(board, chargeCoordinates) {
   for (let i = 0; i < board.length; i++) {
@@ -32,6 +31,25 @@ function findChargePath(board, chargeCoordinates) {
 
 function isValidChargePath(tile) {
   return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false && tile.chargeStatus.charged === false && (tile.isHidden === false || tile.sink === true)
+}
+
+function getOppositeDirection(validChannel) {
+  let channelOpposite = null
+  switch (validChannel) {
+    case 0:
+      channelOpposite = 'south'
+      break
+    case 1:
+      channelOpposite = 'north'
+      break
+    case 2:
+      channelOpposite = 'west'
+      break
+    case 3:
+      channelOpposite = 'east'
+      break
+  }
+  return channelOpposite
 }
 
 module.exports = findChargePath

@@ -13,6 +13,7 @@ const generateBoard = require('./utils/generate-board.js')
 const renderBoard = require('./utils/render-board.js')
 const swapTiles = require('./utils/swap-tiles.js')
 const getValidChannels = require('./utils/get-valid-channels.js')
+const getOppositeDirection = require('./utils/get-opposite-direction.js')
 
 function hasClass(element, clsName) {
   return (' ' + element.className + ' ').indexOf(' ' + clsName + ' ') > -1
@@ -24,25 +25,6 @@ function isInvalidTile(event) {
 
 function isValidChargePath(tile) {
   return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false && tile.chargeStatus.charged === false && (tile.isHidden === false || tile.sink === true)
-}
-
-function getOppositeDirection(validChannel) {
-  let channelOpposite = null
-  switch (validChannel) {
-    case 0:
-      channelOpposite = 'south'
-      break
-    case 1:
-      channelOpposite = 'north'
-      break
-    case 2:
-      channelOpposite = 'west'
-      break
-    case 3:
-      channelOpposite = 'east'
-      break
-  }
-  return channelOpposite
 }
 
 function findChargePath(chargeCoordinates) {

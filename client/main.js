@@ -7,22 +7,7 @@ const getGoalCandidates = require('./utils/get-goal-candidates.js')
 const shuffleArray = require('./utils/shuffle-array.js')
 const defineGoals = require('./utils/define-goals.js')
 const findAdjacentTiles = require('./utils/find-adjacent-tiles.js')
-
-function checkGoalObstruction(goalCoordinates) {
-  for (let i = 0; i < 2; i++) {
-    let adjacent = findAdjacentTiles(game.board, goalCoordinates[i])
-    let keepUnblocked = []
-    for (let j = 0; j < adjacent.length; j++) {
-      if (adjacent[j]) {
-        keepUnblocked = adjacent[j]
-      }
-    }
-    while ((game.board[keepUnblocked[0]][keepUnblocked[1]]).image === 'dead-tile') {
-      (game.board[keepUnblocked[0]][keepUnblocked[1]]).channels = generateChannel(game.board[keepUnblocked[0]][keepUnblocked[1]])
-    }
-  }
-  return game.board
-}
+const checkGoalObstruction = require('./utils/check-goal-obstruction.js')
 
 function partitionCheck(board) {
   let checkStart = null
@@ -502,7 +487,7 @@ function loadShortCircuit() {
   game.source = sourceAndSink[0]
   game.sink = sourceAndSink[1]
 
-  game.board = checkGoalObstruction(sourceAndSink)
+  game.board = checkGoalObstruction(game.board, sourceAndSink)
 
   findChargePath(game.source)
 

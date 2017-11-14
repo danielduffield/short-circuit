@@ -14,6 +14,7 @@ const renderBoard = require('./utils/render-board.js')
 const swapTiles = require('./utils/swap-tiles.js')
 const getValidChannels = require('./utils/get-valid-channels.js')
 const getOppositeDirection = require('./utils/get-opposite-direction.js')
+const findChargePath = require('./utils/find-charge-path.js')
 
 function hasClass(element, clsName) {
   return (' ' + element.className + ' ').indexOf(' ' + clsName + ' ') > -1
@@ -21,38 +22,6 @@ function hasClass(element, clsName) {
 
 function isInvalidTile(event) {
   return ((hasClass(event.target, 'dead-tile')) || (hasClass(event.target, 'hidden-tile')) || (hasClass(event.target, 'charged')) || (hasClass(event.target, 'spent'))) && ((!(hasClass(event.target, 'board-tile'))) || (!(hasClass(event.target, 'channel-render'))))
-}
-
-function isValidChargePath(tile) {
-  return tile.chargeStatus.spent === false && tile.chargeStatus.chargeAligned === false && tile.chargeStatus.charged === false && (tile.isHidden === false || tile.sink === true)
-}
-
-function findChargePath(chargeCoordinates) {
-  for (let i = 0; i < game.board.length; i++) {
-    for (let j = 0; j < game.board[i].length; j++) {
-      game.board[i][j].chargeStatus.chargeAligned = false
-    }
-  }
-  let inChargePath = chargeCoordinates
-  let lastChargedTile = 0
-  while (inChargePath) {
-    let adjacent = findAdjacentTiles(game.board, inChargePath)
-    let validChannels = getValidChannels(game.board, inChargePath)
-    lastChargedTile = inChargePath
-    for (let i = 0; i < validChannels.length; i++) {
-      let channelOpposite = getOppositeDirection(validChannels[i])
-      if (adjacent[validChannels[i]]) {   // if a tile exists in the direction of a valid channel
-        let adjacentTile = game.board[adjacent[validChannels[i]][0]][adjacent[validChannels[i]][1]] // adjacentTile is assigned the value of tile
-        if (isValidChargePath(adjacentTile) && adjacentTile.channels[channelOpposite] === true) { // if adjacentTile is valid/has channel connect
-          adjacentTile.chargeStatus.chargeAligned = true // change that tile to be charge aligned
-          inChargePath = adjacent[validChannels[i]] // set that tile as the new charge pathfinding start point and re-loop
-        }
-      }
-    }
-    if (lastChargedTile === inChargePath) {
-      inChargePath = null
-    }
-  }
 }
 
 function winCheck(endPoint) {
@@ -111,7 +80,7 @@ function animateCharge(timer) {
 }
 
 function updateBoardRender(board) {
-  findChargePath(game.chargeCoordinates)
+  findChargePath(game.board, game.chargeCoordinates)
   winCheck(game.sink)
   let $board = document.getElementById('board-render')
   $board.removeEventListener('click', selectTile)
@@ -244,7 +213,7 @@ function loadShortCircuit() {
 
   game.board = checkGoalObstruction(game.board, sourceAndSink)
 
-  findChargePath(game.source)
+  findChargePath(game.board, game.source)
 
   game.isFirstTurn = true
   game.loss = false

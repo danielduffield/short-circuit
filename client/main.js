@@ -1,10 +1,5 @@
-/* eslint-disable no-unused-vars */
-
 const generateTiles = require('./utils/generate-tiles.js')
-const generateChannel = require('./utils/generate-channel.js')
-const { isHidden, isHiddenCorner } = require('./utils/is-hidden.js')
 const getGoalCandidates = require('./utils/get-goal-candidates.js')
-const shuffleArray = require('./utils/shuffle-array.js')
 const defineGoals = require('./utils/define-goals.js')
 const findAdjacentTiles = require('./utils/find-adjacent-tiles.js')
 const checkGoalObstruction = require('./utils/check-goal-obstruction.js')
@@ -13,7 +8,6 @@ const generateBoard = require('./utils/generate-board.js')
 const renderBoard = require('./utils/render-board.js')
 const swapTiles = require('./utils/swap-tiles.js')
 const getValidChannels = require('./utils/get-valid-channels.js')
-const getOppositeDirection = require('./utils/get-opposite-direction.js')
 const findChargePath = require('./utils/find-charge-path.js')
 
 function hasClass(element, clsName) {

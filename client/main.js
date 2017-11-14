@@ -1,45 +1,8 @@
 /* eslint-disable no-unused-vars */
 
-function generateTiles() {
-  let tiles = []
-  for (let i = 0; i < 8; i++) {
-    for (let j = 0; j < 8; j++) {
-      let tile = {
-        originRow: i,
-        originCol: j,
-        isSelected: false,
-        isHidden: false,
-        image: null,
-        channels: {
-          north: false,
-          south: false,
-          east: false,
-          west: false
-        },
-        source: false,
-        sink: false,
-        chargeStatus: {
-          charged: false,
-          chargePhase: null,
-          chargeAligned: false,
-          spent: false
-        }
-      }
-      tile.channels = generateChannel(tile)
-      if (isHidden(tile)) {
-        tile.isHidden = true
-        tile.channels = null
-      }
-
-      tiles.push(tile)
-    }
-  }
-  return tiles
-}
-
-function isHidden(tile) {
-  return tile.originRow === 0 || tile.originRow === 7 || tile.originCol === 0 || tile.originCol === 7
-}
+const generateTiles = require('./utils/generate-tiles.js')
+const generateChannel = require('./utils/generate-channel.js')
+const isHidden = require('./utils/is-hidden.js')
 
 function isHiddenCorner(tile) {
   return (tile.originRow === 0 && tile.originCol === 0) || (tile.originRow === 0 && tile.originCol === 7) || (tile.originRow === 7 && tile.originCol === 7) || (tile.originRow === 7 && tile.originCol === 0)
@@ -55,48 +18,6 @@ function getGoalCandidates(board) {
     }
   }
   return candidates
-}
-
-function generateChannel(tile) {
-  let random = Math.floor(Math.random() * 7)
-  switch (random) {
-    case 0:
-      tile.image = 'dead-tile'
-      break
-    case 1:
-      tile.image = 'north-south'
-      tile.channels.north = true
-      tile.channels.south = true
-      break
-    case 2:
-      tile.image = 'east-west'
-      tile.channels.east = true
-      tile.channels.west = true
-      break
-    case 3:
-      tile.image = 'north-east'
-      tile.channels.north = true
-      tile.channels.east = true
-      break
-    case 4:
-      tile.image = 'north-west'
-      tile.channels.north = true
-      tile.channels.west = true
-      break
-    case 5:
-      tile.image = 'south-east'
-      tile.channels.south = true
-      tile.channels.east = true
-      break
-    case 6:
-      tile.image = 'south-west'
-      tile.channels.south = true
-      tile.channels.west = true
-      break
-    default:
-      tile.image = 'null'
-  }
-  return tile.channels
 }
 
 function shuffleArray(array) {

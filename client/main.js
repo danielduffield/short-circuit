@@ -8,6 +8,7 @@ const renderBoard = require('./utils/render-board.js')
 const swapTiles = require('./utils/swap-tiles.js')
 const findChargePath = require('./utils/find-charge-path.js')
 const moveChargeOneTile = require('./utils/move-charge-one-tile.js')
+const generateDemoBoard = require('./utils/generate-demo-board.js')
 
 function hasClass(element, clsName) {
   return (' ' + element.className + ' ').indexOf(' ' + clsName + ' ') > -1
@@ -59,14 +60,6 @@ function updateBoardRender(board) {
   document.getElementById('game-board').appendChild($board)
   $board.addEventListener('click', selectTile)
   return board
-}
-
-function generateDemoBoard() {
-  let demoTiles = generateTiles()
-  let demoBoard = generateBoard(demoTiles)
-  let demoGoalCandidates = getGoalCandidates(demoBoard)
-  defineGoals(demoGoalCandidates)
-  return demoBoard
 }
 
 let restartGame = function() {

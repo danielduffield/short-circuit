@@ -3,29 +3,8 @@
 const generateTiles = require('./utils/generate-tiles.js')
 const generateChannel = require('./utils/generate-channel.js')
 const { isHidden, isHiddenCorner } = require('./utils/is-hidden.js')
-
-function getGoalCandidates(board) {
-  let candidates = []
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board[i].length; j++) {
-      if (isHidden(board[i][j]) && !isHiddenCorner(board[i][j])) {
-        candidates.push(board[i][j])
-      }
-    }
-  }
-  return candidates
-}
-
-function shuffleArray(array) {
-  let shuffled = array.slice()
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1))
-    let temp = shuffled[i]
-    shuffled[i] = shuffled[j]
-    shuffled[j] = temp
-  }
-  return shuffled
-}
+const getGoalCandidates = require('./utils/get-goal-candidates.js')
+const shuffleArray = require('./utils/shuffle-array.js')
 
 function defineGoals(candidates) {
   let shuffledCandidates = shuffleArray(candidates)

@@ -4,4 +4,4 @@ const app = express()
 
 app.use(express.static('server/public'))
 
-app.listen(3000, () => console.log('Listening on 3000...'))
+app.listen(process.env.PORT, () => console.log('Listening on PORT...'))

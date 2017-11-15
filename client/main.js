@@ -310,6 +310,6 @@ window.setTimeout(animateTitleBackward, 12500)
 window.setTimeout(reloadTitle, 17000)
 window.setTimeout(replaceSpannedWithTitle, 21000)
 
-demoTimer()
+demoTimer(game)
 let $start = document.getElementById('start-button')
 $start.addEventListener('click', startGame)

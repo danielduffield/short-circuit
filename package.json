@@ -1,7 +1,7 @@
 {
   "name": "short-circuit",
   "version": "1.0.0",
-  "description": "An app for web users who want to draw on a collective, real-time updating canvas.",
+  "description": "An app for gamers who enjoy web-based puzzle games.",
   "engines": {
     "node": "8.2.1"
   },

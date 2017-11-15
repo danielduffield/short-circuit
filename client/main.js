@@ -11,6 +11,8 @@ const moveChargeOneTile = require('./utils/move-charge-one-tile.js')
 const animateCharge = require('./utils/animate-charge.js')
 const hasClass = require('./utils/has-class.js')
 const demoTimer = require('./utils/demo-timer.js')
+const getSpannedTitle = require('./utils/get-spanned-title.js')
+const replaceTitleWithSpanned = require('./utils/replace-title-with-spanned.js')
 
 function isInvalidTile(event) {
   return ((hasClass(event.target, 'dead-tile')) || (hasClass(event.target, 'hidden-tile')) || (hasClass(event.target, 'charged')) || (hasClass(event.target, 'spent'))) && ((!(hasClass(event.target, 'board-tile'))) || (!(hasClass(event.target, 'channel-render'))))
@@ -193,28 +195,6 @@ let game = {
   selectedTiles: null,
   isFirstTurn: true,
   gamesPlayed: 0
-}
-
-function getSpannedTitle() {
-  let $title = document.getElementById('main-title')
-  let $spannedTitle = document.createElement('h1')
-  $spannedTitle.setAttribute('id', 'animated-title')
-  let titleText = $title.textContent
-  for (let i = 0; i < titleText.length; i++) {
-    let $spanLetter = document.createElement('span')
-    $spanLetter.setAttribute('id', 'span-' + i)
-    $spanLetter.textContent = titleText[i]
-    $spanLetter.classList.add('span-title')
-    $spannedTitle.appendChild($spanLetter)
-  }
-  return $spannedTitle
-}
-
-function replaceTitleWithSpanned($spannedTitle) {
-  let $title = document.getElementById('main-title')
-  let $titleContainer = document.getElementById('title-container')
-  $titleContainer.removeChild($title)
-  $titleContainer.appendChild($spannedTitle)
 }
 
 function animateTitleForward() {

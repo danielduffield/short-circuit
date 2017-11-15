@@ -13,6 +13,7 @@ const hasClass = require('./utils/has-class.js')
 const demoTimer = require('./utils/demo-timer.js')
 const getSpannedTitle = require('./utils/get-spanned-title.js')
 const replaceTitleWithSpanned = require('./utils/replace-title-with-spanned.js')
+const { animateTitleForward, animateTitleBackward } = require('./utils/animate-title.js')
 
 function isInvalidTile(event) {
   return ((hasClass(event.target, 'dead-tile')) || (hasClass(event.target, 'hidden-tile')) || (hasClass(event.target, 'charged')) || (hasClass(event.target, 'spent'))) && ((!(hasClass(event.target, 'board-tile'))) || (!(hasClass(event.target, 'channel-render'))))
@@ -76,12 +77,12 @@ function startTimer() {
     game.timer++
     if (game.timer % 2 === 0) {
       $countdown.textContent = (5 - Math.floor(game.timer / 2))
-      animateCharge((Math.floor(game.timer / 2)))
+      animateCharge(game, (Math.floor(game.timer / 2)))
     }
     if (game.timer === 10) {
       pushCharge()
       game.timer = 0
-      animateCharge(0)
+      animateCharge(game, 0)
     }
   }
   game.isFirstTurn = false
@@ -108,7 +109,7 @@ let selectTile = function(event) {
     return
   }
   if (game.isFirstTurn) {
-    animateCharge(game.chargeCoordinates)
+    animateCharge(game)
     startTimer()
   }
   if (game.selectedTiles.length) {
@@ -197,72 +198,6 @@ let game = {
   gamesPlayed: 0
 }
 
-function animateTitleForward() {
-  if (cycles > 41) {
-    let $lastLetter = document.getElementById('span-20')
-    if ($lastLetter.classList.length) {
-      $lastLetter.classList.remove('charged')
-    }
-    return
-  }
-  window.setTimeout(animateTitleForward, 100)
-  if (letterIndex === 0) {
-    let $lastLetter = document.getElementById('span-20')
-    if ($lastLetter.classList.length) {
-      $lastLetter.classList.remove('charged')
-    }
-  }
-  if (letterIndex - 1 >= 0) {
-    let $lastLetter = document.getElementById('span-' + (letterIndex - 1))
-    $lastLetter.classList.remove('charged')
-  }
-  let $currentLetter = document.getElementById('span-' + letterIndex)
-  $currentLetter.classList.add('charged')
-  letterIndex++
-  if (letterIndex === 21) {
-    if (cycles > 40) {
-      letterIndex = 20
-    }
-    else {
-      letterIndex = 0
-    }
-  }
-  cycles++
-}
-
-function animateTitleBackward() {
-  if (cycles < 1) {
-    let $lastLetter = document.getElementById('span-0')
-    if ($lastLetter.classList.length) {
-      $lastLetter.classList.remove('charged')
-    }
-    return
-  }
-  window.setTimeout(animateTitleBackward, 100)
-  if (letterIndex === 20) {
-    let $lastLetter = document.getElementById('span-0')
-    if ($lastLetter.classList.length) {
-      $lastLetter.classList.remove('charged')
-    }
-  }
-  if (letterIndex + 1 <= 20) {
-    let $lastLetter = document.getElementById('span-' + (letterIndex + 1))
-    $lastLetter.classList.remove('charged')
-  }
-  let $currentLetter = document.getElementById('span-' + letterIndex)
-  $currentLetter.classList.add('charged')
-  letterIndex--
-  if (letterIndex === -1) {
-    if (cycles === 1) {
-      letterIndex = 0
-    }
-    else {
-      letterIndex = 20
-    }
-  }
-  cycles--
-}
-
 function replaceSpannedWithTitle() {
   let $title = document.createElement('h1')
   let $spannedTitle = document.getElementById('animated-title')
@@ -279,9 +214,6 @@ function reloadTitle() {
   $titleContainer.removeChild($title)
   $titleContainer.appendChild($title)
 }
-
-let letterIndex = 0
-let cycles = 0
 
 replaceTitleWithSpanned(getSpannedTitle())
 window.setTimeout(animateTitleForward, 4000)

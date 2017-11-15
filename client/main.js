@@ -12,7 +12,7 @@ const animateCharge = require('./utils/animate-charge.js')
 const hasClass = require('./utils/has-class.js')
 const demoTimer = require('./utils/demo-timer.js')
 const getSpannedTitle = require('./utils/get-spanned-title.js')
-const replaceTitleWithSpanned = require('./utils/replace-title-with-spanned.js')
+const { replaceTitleWithSpanned, replaceSpannedWithTitle } = require('./utils/convert-title.js')
 const { animateTitleForward, animateTitleBackward } = require('./utils/animate-title.js')
 
 function isInvalidTile(event) {
@@ -196,16 +196,6 @@ let game = {
   selectedTiles: null,
   isFirstTurn: true,
   gamesPlayed: 0
-}
-
-function replaceSpannedWithTitle() {
-  let $title = document.createElement('h1')
-  let $spannedTitle = document.getElementById('animated-title')
-  $title.textContent = '/-/ SH0RT.C1RCU1T /+/'
-  $title.setAttribute('id', 'main-title')
-  let $titleContainer = document.getElementById('title-container')
-  $titleContainer.removeChild($spannedTitle)
-  $titleContainer.appendChild($title)
 }
 
 function reloadTitle() {

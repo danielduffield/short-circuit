@@ -8,9 +8,9 @@ const renderBoard = require('./utils/render-board.js')
 const swapTiles = require('./utils/swap-tiles.js')
 const findChargePath = require('./utils/find-charge-path.js')
 const moveChargeOneTile = require('./utils/move-charge-one-tile.js')
-const generateDemoBoard = require('./utils/generate-demo-board.js')
 const animateCharge = require('./utils/animate-charge.js')
 const hasClass = require('./utils/has-class.js')
+const demoTimer = require('./utils/demo-timer.js')
 
 function isInvalidTile(event) {
   return ((hasClass(event.target, 'dead-tile')) || (hasClass(event.target, 'hidden-tile')) || (hasClass(event.target, 'charged')) || (hasClass(event.target, 'spent'))) && ((!(hasClass(event.target, 'board-tile'))) || (!(hasClass(event.target, 'channel-render'))))
@@ -193,20 +193,6 @@ let game = {
   selectedTiles: null,
   isFirstTurn: true,
   gamesPlayed: 0
-}
-
-function demoTimer() {
-  if (game.demo === true) {
-    window.setTimeout(demoTimer, 2500)
-    let demoBoard = generateDemoBoard()
-    let $demoBoard = renderBoard(demoBoard)
-    let $demoBoardSlot = document.getElementById('game-board-demo')
-    let $demoBoardRender = document.getElementById('board-render')
-    if ($demoBoardRender) {
-      $demoBoardSlot.removeChild($demoBoardRender)
-    }
-    $demoBoardSlot.appendChild($demoBoard)
-  }
 }
 
 function getSpannedTitle() {

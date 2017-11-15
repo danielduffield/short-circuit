@@ -10,10 +10,7 @@ const findChargePath = require('./utils/find-charge-path.js')
 const moveChargeOneTile = require('./utils/move-charge-one-tile.js')
 const generateDemoBoard = require('./utils/generate-demo-board.js')
 const animateCharge = require('./utils/animate-charge.js')
-
-function hasClass(element, clsName) {
-  return (' ' + element.className + ' ').indexOf(' ' + clsName + ' ') > -1
-}
+const hasClass = require('./utils/has-class.js')
 
 function isInvalidTile(event) {
   return ((hasClass(event.target, 'dead-tile')) || (hasClass(event.target, 'hidden-tile')) || (hasClass(event.target, 'charged')) || (hasClass(event.target, 'spent'))) && ((!(hasClass(event.target, 'board-tile'))) || (!(hasClass(event.target, 'channel-render'))))

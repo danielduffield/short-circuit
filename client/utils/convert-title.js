@@ -15,4 +15,11 @@ function replaceSpannedWithTitle() {
   $titleContainer.appendChild($title)
 }
 
-module.exports = { replaceTitleWithSpanned, replaceSpannedWithTitle }
+function reloadTitle() {
+  let $title = document.getElementById('animated-title')
+  let $titleContainer = document.getElementById('title-container')
+  $titleContainer.removeChild($title)
+  $titleContainer.appendChild($title)
+}
+
+module.exports = { replaceTitleWithSpanned, replaceSpannedWithTitle, reloadTitle }

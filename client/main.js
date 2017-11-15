@@ -11,8 +11,7 @@ const moveChargeOneTile = require('./utils/move-charge-one-tile.js')
 const animateCharge = require('./utils/animate-charge.js')
 const hasClass = require('./utils/has-class.js')
 const demoTimer = require('./utils/demo-timer.js')
-const getSpannedTitle = require('./utils/get-spanned-title.js')
-const { replaceTitleWithSpanned, replaceSpannedWithTitle, reloadTitle } = require('./utils/convert-title.js')
+const { getSpannedTitle, replaceTitleWithSpanned, replaceSpannedWithTitle, reloadTitle } = require('./utils/convert-title.js')
 const { animateTitleForward, animateTitleBackward } = require('./utils/animate-title.js')
 
 function isInvalidTile(event) {
